@@ -19,7 +19,7 @@
     "test": "vitest",
     "prepack": "node --experimental-strip-types ./scripts/prepack.ts",
     "pack": "pnpm prepack && cd dist && pnpm pack --pack-destination ..",
-    "publish": "pnpm prepack && cd dist && pnpm publish --access public"
+    "publish:npm": "pnpm prepack && cd dist && pnpm publish --access public"
   },
   "author": "valooford",
   "license": "MIT",
