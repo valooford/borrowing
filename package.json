@@ -17,7 +17,9 @@
     "lint": "eslint . --cache --flag unstable_native_nodejs_ts_config",
     "format": "prettier . --write",
     "test": "vitest",
-    "pack": "node --experimental-strip-types ./scripts/prepack.ts && cd dist && pnpm pack --pack-destination .."
+    "prepack": "node --experimental-strip-types ./scripts/prepack.ts",
+    "pack": "pnpm prepack && cd dist && pnpm pack --pack-destination ..",
+    "publish": "pnpm prepack && cd dist && pnpm publish --access public"
   },
   "author": "valooford",
   "license": "MIT",
