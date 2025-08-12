@@ -1,0 +1,11 @@
+// hint: include those to your settings.json
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "npm.exclude": ["**/dist"],
+  //? Support TS config files (https://github.com/microsoft/vscode-eslint/issues/1917)
+  "eslint.runtime": "node",
+  "eslint.options": {
+    // https://github.com/microsoft/vscode-eslint/issues/2003#issuecomment-2794039639
+    "flags": ["unstable_native_nodejs_ts_config"]
+  }
+}

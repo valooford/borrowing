@@ -1,0 +1,79 @@
+{
+  "name": "borrowing",
+  "version": "0.1.0",
+  "description": "Work In Progress",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "lint": "eslint . --cache --flag unstable_native_nodejs_ts_config",
+    "format": "prettier . --write",
+    "test": "vitest",
+    "pack": "node --experimental-strip-types ./scripts/prepack.ts && cd dist && pnpm pack --pack-destination .."
+  },
+  "author": "valooford",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valooford/borrowing.git"
+  },
+  "homepage": "https://github.com/valooford/borrowing#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.5.1",
+    "@types/node": "^24.2.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "eslint": "^9.32.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "globals": "^16.3.0",
+    "globby": "^14.1.0",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.0",
+    "vitest": "^3.2.4"
+  },
+  "keywords": [
+    "borrowing",
+    "ownership",
+    "assertion",
+    "typesafe",
+    "static-typing",
+    "utility",
+    "typeguards",
+    "typescript",
+    "rust",
+    "state",
+    "state-machine",
+    "narrowing",
+    "owner",
+    "borrow",
+    "narrow",
+    "capture",
+    "primitive",
+    "util",
+    "tool",
+    "tools",
+    "safe",
+    "type",
+    "types",
+    "generic",
+    "generics",
+    "primitive",
+    "assert",
+    "asserts",
+    "validate",
+    "validation",
+    "check",
+    "checking"
+  ]
+}

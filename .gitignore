@@ -1,0 +1,17 @@
+# Dependency directories
+node_modules/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+# _*.jsonc - these are the configurations recommended for use during development
+!.vscode/_*.jsonc
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'pnpm pack'
+*.tgz
+
+# Build / generate output
+dist
