@@ -1,6 +1,6 @@
 {
   "name": "borrowing",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Allows you to pass values to a function and get the most accurate value type in the following code",
   "type": "module",
   "main": "./dist/index.js",
