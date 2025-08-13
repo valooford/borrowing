@@ -1,0 +1,200 @@
+<svg fill="none" viewBox="0 0 550 160" width="550" height="160" xmlns="http://www.w3.org/2000/svg">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+        /* https://gist.github.com/roachhd/393f0df3193f1102383a */
+        header {
+          --color-main: #111;
+          --color-secondary: #444;
+
+          margin: auto;
+          margin-top: -10px;
+          padding: 1em;
+          color: var(--color-secondary);
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+          font-size: 24px;
+          line-height: 1.5em;
+        }
+        @media (prefers-color-scheme: light) {
+          header {
+            background-color: #fff;
+          }
+        }
+        @media (prefers-color-scheme: dark) {
+          header {
+            --color-main: #eee;
+            --color-secondary: #bbb;
+          }
+        }
+        h1, h2, h3, h4, h5, h6 {
+          color: var(--color-main);
+          font-weight: 600;
+          line-height: 1rem;
+        }
+        h1 { font-size: 5rem; }
+        /* -------- */
+        
+        .container {
+          display: flex;
+
+          /* https://easingwizard.com/ */
+          --oo-capture-fn: linear(0, 0.266 8.7%, 0.536 19.8%, 0.836 34.3%, 1 44.7%, 0.942 51.1%, 0.923 57.5%, 0.935 63.1%, 1 77.4%, 0.991 84.2%, 1);
+          --oo-bounce-fn: cubic-bezier(0.78, 0, 0.22, 1);
+          --oo-drop-fn: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        .container > *:not(:first-of-type):not(:last-of-type) {
+          flex: 1;
+        }
+
+        @keyframes oo_capture {
+          0% { top: -10rem; }
+          15% { top: 0; }
+        }
+        @keyframes oo_bounce  {
+          0% { margin-left: 0; }
+          20% { margin-left: 0; }
+          37.5% { margin-left: 100%; }
+          42.5% { margin-left: 100%; }
+          57.5% { margin-left: 0; }
+          62.5% { margin-left: 0; }
+          80% { margin-left: 100%; }
+          100% { margin-left: 100%; }
+        }
+        @keyframes o_bounce  {
+          0% { margin-left: 0; }
+          20% { margin-left: 0; }
+          37.5% { margin-left: -100%; }
+          40% { color: inherit; }
+          45.5% { margin-left: -100%; color: #0087ff; }
+          55.0% { margin-left: 0; color: #0087ff; }
+          57.5% { margin-left: 0; }
+          60.5% { color: inherit }
+          62.5% { margin-left: 0; }
+          66% { color: #8dff00; }
+          75.5% { color: #8dff00; }
+          80% { margin-left: -100%; }
+          87.5% { color: inherit }
+          100% { margin-left: -100%; }
+        }
+        @keyframes oo_drop {
+          80% { top: 0; }
+          95% { top: 10rem; }
+          100% { top: 10rem; }
+        }
+        .oo {
+          display: inline-block;
+          position: relative;
+          animation: oo_capture 5s var(--oo-capture-fn), oo_bounce 5s var(--oo-bounce-fn), oo_drop 5s var(--oo-drop-fn);
+          animation-iteration-count: infinite;
+        }
+        .o {
+          display: inline-block;
+          animation: o_bounce 5s var(--oo-bounce-fn) infinite;
+        }
+
+        @keyframes morph_flash  {
+          0% { color: inherit; }
+          1% { color: #004d91; }
+          10% { color: inherit; }
+        }
+        @keyframes leave_flash  {
+          0% { color: inherit; }
+          1% { color: #509100; }
+          10% { color: inherit; }
+        }
+        .borr, .wing {
+          display: flex;
+          position: relative;
+        }
+        .g8 {
+          animation: morph_flash 5s ease-in-out 1850ms, leave_flash 5s ease-in-out 3850ms;
+        }
+        .n7 {
+          animation: morph_flash 5s ease-in-out 1900ms, leave_flash 5s ease-in-out 3800ms;
+        }
+        .i6 {
+          animation: morph_flash 5s ease-in-out 1950ms, leave_flash 5s ease-in-out 3750ms;
+        }
+        .w5 {
+          animation: morph_flash 5s ease-in-out 2000ms, leave_flash 5s ease-in-out 3700ms;
+        }
+        .r3 {
+          animation: morph_flash 5s ease-in-out 2600ms, leave_flash 5s ease-in-out 3100ms;
+        }
+        .r2 {
+          animation: morph_flash 5s ease-in-out 2650ms, leave_flash 5s ease-in-out 3050ms;
+        }
+        .o1 {
+          animation: morph_flash 5s ease-in-out 2700ms, leave_flash 5s ease-in-out 3000ms;
+        }
+        .b0 {
+          animation: morph_flash 5s ease-in-out 2750ms, leave_flash 5s ease-in-out 2950ms;
+        }
+        .b0, .o1, .r2, .r3, .w5, .i6, .n7, .g8 {
+          animation-iteration-count: infinite;
+        }
+
+        @keyframes action_display  {
+          0% { opacity: 0; }
+          3% { opacity: 1; }
+          13% { opacity: 1; }
+          18% { opacity: 0; }
+          100% { opacity: 0; }
+        }
+        .action {
+          position: absolute;
+          top: 100%;
+          margin-top: 2rem;
+          font-size: 1rem;
+          font-weight: 400;
+          color: var(--color-secondary);
+          opacity: 0;
+        }
+        .capture, .give, .give2 {
+          right: 0;
+        }
+        .release, .drop {
+          left: 0;
+        }
+        .capture {
+          animation: action_display 5s ease-in-out infinite;
+        }
+        .give {
+          animation: action_display 5s ease-in-out 1000ms infinite;
+        }
+        .release {
+          animation: action_display 5s ease-in-out 1850ms infinite;
+        }
+        .give2 {
+          animation: action_display 5s ease-in-out 2950ms infinite;
+        }
+        .drop {
+          animation: action_display 5s ease-in-out 3700ms infinite;
+        }
+      </style>
+
+      <header>
+        <h1 class="container">
+          <span class="borr">
+            <span class="b0">b</span>
+            <span class="o1">o</span>
+            <span class="r2">r</span>
+            <span class="r3">r</span>
+            <div class="action capture">capture🡣</div>
+            <div class="action give">give🡢</div>
+            <div class="action give2">give🡢</div>
+          </span>
+          <span><span class="oo"><span class="o">o</span></span></span>
+          <span class="wing">
+            <span class="w5">w</span>
+            <span class="i6">i</span>
+            <span class="n7">n</span>
+            <span class="g8">g</span>
+            <div class="action release">🡠release</div>
+            <div class="action drop">🡣drop</div>
+          </span>
+        </h1>
+      </header>
+    </div>
+  </foreignObject>
+</svg>

@@ -24,6 +24,7 @@ async function prepack() {
 
   // from https://docs.npmjs.com/cli/v9/using-npm/developers#keeping-files-out-of-your-package
   const neverIgnored = ['package.json', 'README*', 'CHANGELOG*', 'LICEN[SC]E']
+  neverIgnored.push('header.svg')
   files = files.concat(
     await globby(neverIgnored, {
       dot: true,

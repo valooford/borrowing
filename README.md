@@ -1,6 +1,6 @@
 <div align="center">
 
-# borrowing
+# <img src="header.svg" alt="borrowing" style="width: 100%; max-height: 180px">
 
 <p align="center">
   <a href="https://www.npmjs.com/package/borrowing" >
@@ -8,7 +8,8 @@
   </a>
 </p>
 
-Allows you to pass values to a function and get the most accurate value type in the following code:
+Allows you to pass values to a function and get the most accurate value type  
+in the following code:
 
 <ul align="left">
 
@@ -22,11 +23,7 @@ Allows you to pass values to a function and get the most accurate value type in 
 <hr/><br/>
 </div>
 
-<div align="right">
-
 English | [Русский](./README.ru-RU.md)
-
-</div>
 
 ## Example
 
@@ -84,7 +81,7 @@ import { take } from 'borrowing'
 // unsafe because the ownership is still in use (not `undefined` or `never`)
 let morphedValue = ownership.take()
 
-// safer alternative - asserts ownership is `never`
+// safer alternative - asserts `ownership is never`
 take(ownership, (str) => (morphedValue = str))
 ```
 
