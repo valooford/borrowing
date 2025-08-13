@@ -3,6 +3,7 @@ import type { Branded } from '@shared/types'
 
 import { BaseOwnership } from './ownership'
 
+/** @see https://github.com/valooford/borrowing/blob/main/README.md */
 export class Ownership<
   General,
   Captured = unknown,

@@ -3,6 +3,7 @@ import type * as OwnershipTypes from '@ownership/types'
 import { isOwnership } from '@ownership/utils/isOwnership'
 import { isFunction } from '@shared/utils'
 
+/** @see https://github.com/valooford/borrowing/blob/main/README.md */
 export function take<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.ParamsBounds<T>,
   receiver: Record<string, T['Released']> | ((value: T['Released']) => void),

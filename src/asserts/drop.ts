@@ -2,6 +2,7 @@ import type * as OwnershipTypes from '@ownership/types'
 
 import { isOwnership } from '@ownership/utils/isOwnership'
 
+/** @see https://github.com/valooford/borrowing/blob/main/README.md */
 export function drop<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.ParamsBounds<T>,
   payload?: T['ReleasePayload'],

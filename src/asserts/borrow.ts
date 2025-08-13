@@ -3,6 +3,7 @@ import type * as OwnershipTypes from '@ownership/types'
 
 import { isPubOwnership } from '@ownership/utils/isPubOwnership'
 
+/** @see https://github.com/valooford/borrowing/blob/main/README.md */
 export function borrow<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.PubParamsBounds<T>,
 ): asserts ownership is ConsumerOwnership<T['General'], T['General'], any, any, T['ReleasePayload']> {
