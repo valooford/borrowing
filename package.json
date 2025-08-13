@@ -1,6 +1,6 @@
 {
   "name": "borrowing",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Work In Progress",
   "type": "module",
   "main": "./dist/index.js",
