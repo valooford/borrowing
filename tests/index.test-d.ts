@@ -114,7 +114,7 @@ describe('Usage (provide)', () => {
 
   function throwAway<T extends Ownership.GenericBounds<number>>(
     ownership: Ownership.ParamsBounds<T> | undefined,
-  ): asserts ownership is Ownership.MorphAssertion<T, undefined> {
+  ): asserts ownership is Ownership.LeaveAssertion<T> {
     borrow(ownership)
     drop(ownership)
   }
@@ -211,7 +211,7 @@ describe('Usage (consume)', () => {
   it('should restrict access to protected/private properties', () => {
     function _bad<T extends Ownership.GenericBounds<number>>(
       ownership: Ownership.ParamsBounds<T> | undefined,
-    ): asserts ownership is Ownership.MorphAssertion<T, undefined> {
+    ): asserts ownership is Ownership.LeaveAssertion<T> {
       let _visible: any
       let _hidden: any
 
