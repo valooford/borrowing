@@ -33,7 +33,7 @@ describe('release', () => {
       release(ownership, (prev) => prev)
     }
     const ownership = new Ownership().give()
-    expect(() => _assert(ownership)).toThrow('Unable to release (not borrowed), call `borrow` first')
+    expect(() => _assert(ownership)).toThrow('Unable to release (already settled), call `give` first')
   })
   {
     const value = 123
