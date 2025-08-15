@@ -24,7 +24,6 @@ async function prepack() {
 
   // from https://docs.npmjs.com/cli/v9/using-npm/developers#keeping-files-out-of-your-package
   const neverIgnored = ['package.json', 'README*', 'CHANGELOG*', 'LICEN[SC]E']
-  neverIgnored.push('header.svg')
   files = files.concat(
     await globby(neverIgnored, {
       dot: true,
@@ -59,6 +58,7 @@ async function prepack() {
   const packageJsonPath = rootPath('package.json')
   const packageData = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as PackageJson
 
+  delete packageData.engines
   delete packageData.scripts
   delete packageData.devDependencies
   const makeDistRelative = (p: string) => `./${path.posix.relative('dist', p)}`

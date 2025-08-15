@@ -4,3 +4,5 @@
 # Allow dist folder
 !dist/
 !dist/**/*
+
+!header.svg

@@ -5,26 +5,18 @@
         /* https://gist.github.com/roachhd/393f0df3193f1102383a */
         header {
           --color-main: #111;
-          --color-secondary: #444;
+          --color-secondary: #333;
 
           margin: auto;
           margin-top: -10px;
           padding: 1em;
           color: var(--color-secondary);
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+          /* Disabled: Unicode arrow problems on mobile devices */
+          /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;*/ 
           font-size: 24px;
           line-height: 1.5em;
-        }
-        @media (prefers-color-scheme: light) {
-          header {
-            background-color: #fff;
-          }
-        }
-        @media (prefers-color-scheme: dark) {
-          header {
-            --color-main: #eee;
-            --color-secondary: #bbb;
-          }
+          
+          background-color: #fff; /* there is no dark theme on npmjs.com so background is required */
         }
         h1, h2, h3, h4, h5, h6 {
           color: var(--color-main);
@@ -65,13 +57,13 @@
           20% { margin-left: 0; }
           37.5% { margin-left: -100%; }
           40% { color: inherit; }
-          45.5% { margin-left: -100%; color: #0087ff; }
-          55.0% { margin-left: 0; color: #0087ff; }
+          45.5% { margin-left: -100%; color: #0065ff; }
+          55.0% { margin-left: 0; color: #0065ff; }
           57.5% { margin-left: 0; }
           60.5% { color: inherit }
           62.5% { margin-left: 0; }
-          66% { color: #8dff00; }
-          75.5% { color: #8dff00; }
+          66% { color: #ff5d00; }
+          75.5% { color: #ff5d00; }
           80% { margin-left: -100%; }
           87.5% { color: inherit }
           100% { margin-left: -100%; }
@@ -92,14 +84,16 @@
           animation: o_bounce 5s var(--oo-bounce-fn) infinite;
         }
 
+        /* Portal Color Palette https://www.color-hex.com/color-palette/7641 */
         @keyframes morph_flash  {
           0% { color: inherit; }
-          1% { color: #004d91; }
+          0.25% { color: #0065ff; }
+          1.5% { color: #0065ff; }
           10% { color: inherit; }
         }
         @keyframes leave_flash  {
           0% { color: inherit; }
-          1% { color: #509100; }
+          1% { color: #ff5d00; }
           10% { color: inherit; }
         }
         .borr, .wing {
