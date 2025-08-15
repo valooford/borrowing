@@ -10,7 +10,9 @@ import { borrow, drop, Ownership, release, take } from 'borrowing'
 describe('Ownership', () => {
   it('should initialize the general type', () => {
     const ownership = new Ownership<number>()
-    expectTypeOf(ownership).toExtend<Ownership<number, unknown, unknown, Branded<'settled', 'released'>, unknown>>()
+    expectTypeOf(ownership).toEqualTypeOf<
+      Ownership<number, unknown, unknown, Branded<'settled', 'released'>, unknown>
+    >()
   })
   describe('', () => {
     type Test = Ownership<'first', 'second', 'third', 'unknown', 'fifth'>

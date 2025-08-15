@@ -48,7 +48,7 @@ importers:
         specifier: ^8.39.0
         version: 8.39.0(eslint@9.32.0)(typescript@5.9.2)
       vitest:
-        specifier: ^3.2.4
+        specifier: 3.2.4
         version: 3.2.4(@types/node@24.2.0)
 
 packages:

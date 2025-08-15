@@ -1,7 +1,7 @@
 {
   "name": "borrowing",
   "version": "0.1.8",
-  "description": "Allows you to pass values to a function and get the most accurate value type in the following code",
+  "description": "A utility library that provides borrowing mechanisms via assertion functions",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -10,6 +10,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
+  },
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
   },
   "scripts": {
     "dev": "tsup --watch",
@@ -42,7 +46,7 @@
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.0",
-    "vitest": "^3.2.4"
+    "vitest": "3.2.4"
   },
   "keywords": [
     "borrowing",
