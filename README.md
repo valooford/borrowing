@@ -112,8 +112,6 @@ take(ownership, (str) => (morphedValue = str))
 
 ### `Ownership`
 
-### `Ownership`
-
 #### `Ownership#captured`
 
 #### `Ownership#released`
@@ -146,7 +144,7 @@ take(ownership, (str) => (morphedValue = str))
 
 ### `borrow`
 
-> **borrow**(`Ownership`): asserts ownership is `ConsumerOwnership`
+> [**borrow**](https://github.com/valooford/borrowing/blob/main/src/asserts/borrow.ts)(`Ownership`): asserts ownership is `ConsumerOwnership`
 
 **@summary**
 
@@ -204,7 +202,7 @@ function _assert<T extends Ownership.GenericBounds<number>>(
 
 ### `release`
 
-> **release**(`Ownership`, _value_ | _setValue_, _payload_): asserts ownership is `never`
+> [**release**](https://github.com/valooford/borrowing/blob/main/src/asserts/release.ts)(`Ownership`, _value_ | _setValue_, _payload_): asserts ownership is `never`
 
 **@summary**
 
@@ -263,7 +261,7 @@ function _assert<T extends Ownership.GenericBounds>(
 
 ### `drop`
 
-> **drop**(`Ownership`, _payload_): asserts ownership is `never`
+> [**drop**](https://github.com/valooford/borrowing/blob/main/src/asserts/drop.ts)(`Ownership`, _payload_): asserts ownership is `never`
 
 **@summary**
 
@@ -332,7 +330,7 @@ function _assert<T extends Ownership.GenericBounds>(
 
 ### `take`
 
-> **take**(`Ownership`, receiver, receiverKey?): asserts ownership is `never`
+> [**take**](https://github.com/valooford/borrowing/blob/main/src/asserts/take.ts)(`Ownership`, receiver, receiverKey?): asserts ownership is `never`
 
 **@summary**
 
