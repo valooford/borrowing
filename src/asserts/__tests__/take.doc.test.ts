@@ -1,8 +1,8 @@
-import { borrow, Ownership, release, take } from 'borrowing'
-
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+
+import { borrow, Ownership, release, take } from 'borrowing'
 
 // file://./../take.ts
 // file://./../../../README.md#take

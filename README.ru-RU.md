@@ -70,33 +70,13 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 
 ---
 
-(\*) - Использование функции `take()` предпочтительнее `Ownership#take()`
-
-```ts
-import { take } from 'borrowing'
-
-// небезопасно, т.к. `ownership` все еще доступен для использования (не приведен к `undefined` или `never`)
-let morphedValue = ownership.take()
-
-// безопасная альтернатива - приводит (asserts) `ownership` к `never`
-take(ownership, (str) => (morphedValue = str))
-```
-
-> [!tip]
-> **Совет**
->
-> Используйте в паре с правилами `no-unsafe-*` из [`typescript-eslint`](https://typescript-eslint.io/), такими как [`no-unsafe-call`](https://typescript-eslint.io/rules/no-unsafe-call/).  
-> Это позволяет предотвратить дальнейшее использование экземпляра Ownership, как после вызова `take()`, так и после любого другого действия, приводящего к `never`.
-
 # Содержимое
 
 - [Полезные ссылки](#полезные-ссылки)
 - [Справочник API](#справочник-api)
   - [`Ownership`](#ownership)
-    - [`Ownership#captured`](#ownershipcaptured)
-    - [`Ownership#released`](#ownershipreleased)
-    - [`ConsumerOwnership#releasePayload`](#consumerownershipreleasepayload)
     - [`Ownership#options`](#ownershipoptions)
+    - [`ConsumerOwnership#captured`](#consumerownershipcaptured)
     - [`Ownership#capture()`](#ownershipcapture)
     - [`Ownership#expectPayload()`](#ownershipexpectpayload)
     - [`Ownership#give()`](#ownershipgive)
@@ -111,37 +91,102 @@ take(ownership, (str) => (morphedValue = str))
 
 - [Про assertion функции в TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions) [ англ. ]
 
+> [!tip]
+> **Совет**
+>
+> Используйте библиотеку в паре с правилами `no-unsafe-*` из [`typescript-eslint`](https://typescript-eslint.io/), такими как [`no-unsafe-call`](https://typescript-eslint.io/rules/no-unsafe-call/).  
+> Это позволяет предотвратить дальнейшее использование экземпляра Ownership, как после вызова `take()`, так и после любого другого действия, приводящего к `never`.
+
 ## Справочник API
 
 ### `Ownership`
 
-#### `Ownership#captured`
+> [**Ownership**](https://github.com/valooford/borrowing/blob/main/src/ownership/ownership.ts)([options?](#ownershipoptions)): `Ownership<General, Captured, Released, State, ReleasePayload>`
 
-#### `Ownership#released`
+**@summary**
 
-#### `ConsumerOwnership#releasePayload`
+Конструктор примитивов, определяющих владение над значением определенного типа. \
+Общий (General) тип значения указывается в списке параметров дженерика.
+
+**@description**
+
+Является исходным и целевым типом assertion функций.
+
+Вместе с assertion функциями реализует механизмы заимствования через видоизменение собственного типа. \
+Тип экземпляра `Ownership` отражает как тип заимствованного в каждый момент времени значения,
+так и состояние заимствования.
 
 #### `Ownership#options`
 
+**@summary**
+
+Позволяет настраивать аспекты работы механизмов заимствования в рантайме. \
+Доступны для чтения/записи прежде любого использования экземпляра `Ownership`.
+
+| Настройка         | Тип       | Значение по умолчанию | Описание                                                                                                          |
+| ----------------- | --------- | --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| throwOnWrongState | `boolean` | `true`                | Включает выброс ошибок при неудавшейся смене состояния владения/заимствования через встроенные assertion функции. |
+
+#### `ConsumerOwnership#captured`
+
+**@summary**
+
+Содержит заимствованное (captured) значение до момента, пока экземпляр `Ownership`
+не будет обработан assertion функцией. \
+Доступен внутри assertion функции. Во внешнем коде извлекается через функцию или метод `take()`.
+
 #### `Ownership#capture()`
+
+**@summary**
+
+Устанавливает значение, над которым определено владение. \
+Рекомендуется использование литеральной формы значения в паре с утверждением `as const`.
 
 #### `Ownership#expectPayload()`
 
+**@summary**
+
+Определяет для экземпляра `Ownership` тип значения,
+которое может быть передано assertion функцией в ходе ее выполнения.
+
 #### `Ownership#give()`
+
+**@summary**
+
+Подготавливает экземпляр `Ownership` к передаче внутрь assertion функции.
 
 #### `Ownership#take()`
 
+**@summary**
+
+Извлекает заимствованное (captured) значение. \
+После извлечения экземпляр `Ownership` больше не содержит значения.
+
+**@description**
+
+Метод `take` не инвалидирует экземпляр `Ownership`. \
+По этой причине рекомендуется использование функции `take()`.
+
+```ts
+import { take } from 'borrowing'
+
+// небезопасно, т.к. `ownership` все еще доступен для использования (не приведен к `undefined` или `never`)
+let morphedValue = ownership.take()
+
+// безопасная альтернатива - приводит (asserts) `ownership` к `never`
+take(ownership, (str) => (morphedValue = str))
+```
+
 #### Вспомогательные типы
 
-| Пространство имен `Ownership`         |
-| ------------------------------------- |
-| `Ownership.Options`                   |
-| `Ownership.infer<T>`                  |
-| `Ownership.inferTypes<T>`             |
-| `Ownership.GenericBounds<G,RP,C,R,S>` |
-| `Ownership.ParamsBounds<T>`           |
-| `Ownership.MorphAssertion<T,R>`       |
-| `Ownership.LeaveAssertion<T>`         |
+| Пространство имен `Ownership`                     | Описание                                                                                                                                                                                                                                           |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Ownership.Options`                               | Настройки механизмов заимствования в рантайме.                                                                                                                                                                                                     |
+| `Ownership.inferTypes<T>`                         | Типы параметров экземпляра по отдельности, например `inferTypes<typeof ownership>['Captured']`.                                                                                                                                                    |
+| `Ownership.GenericBounds<General,ReleasePayload>` | Для использования в списке параметров дженерик-типа assertion функции, чтобы произвести маппинг из типа фактически переданного экземпляра `Ownership`.<br>На выходе получается структура, удобная для использования в `*Assertion` дженерик-типах. |
+| `Ownership.ParamsBounds<GenericBounds>`           | Для использования в качестве типа параметра assertion функции, принимающего экземпляр `Ownership`.<br>Внутрь передается дженерик параметр для успешного маппинга в `GenericBounds`.                                                                |
+| `Ownership.MorphAssertion<GenericBounds,Release>` | Целевой тип assertion функции, возвращающей `Ownership` с потенциально видоизмененным типом заимствованного (captured) значения.                                                                                                                   |
+| `Ownership.LeaveAssertion<GenericBounds>`         | Целевой тип assertion функции, поглощающей заимствованное значение и инвалидирующей тип `Ownership`.                                                                                                                                               |
 
 [К содержимому ↩](#содержимое)
 

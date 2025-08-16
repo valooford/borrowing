@@ -56,7 +56,7 @@ import { isPubOwnership } from '@ownership/utils/isPubOwnership'
  * }
  * ```
  *
- * @see https://github.com/valooford/borrowing/blob/main/README.md#borrow
+ * @see https://github.com/valooford/borrowing#borrow
  */
 export function borrow<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.PubParamsBounds<T>,

@@ -54,7 +54,7 @@ import { isFunction } from '@shared/utils'
  * take(ownership, dst) // Error: Unable to take (already taken)
  * ```
  *
- * @see https://github.com/valooford/borrowing/blob/main/README.md#take
+ * @see https://github.com/valooford/borrowing#take
  */
 export function take<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.ParamsBounds<T>,

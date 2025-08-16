@@ -1,11 +1,11 @@
-import type { Branded } from 'borrowing'
-
-import { Ownership, take } from 'borrowing'
-
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
+
+import type { Branded } from 'borrowing'
+
+import { Ownership, take } from 'borrowing'
 
 // https://vitest.dev/guide/testing-types.html
 

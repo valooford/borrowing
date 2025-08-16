@@ -1,6 +1,6 @@
-import { borrow, Ownership, release } from 'borrowing'
-
 /* eslint-disable @typescript-eslint/no-unused-expressions */
+
+import { borrow, Ownership, release } from 'borrowing'
 
 // https://vitest.dev/guide/testing-types.html
 

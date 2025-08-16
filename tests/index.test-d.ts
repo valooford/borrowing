@@ -1,9 +1,10 @@
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
+
 import type { Branded } from 'borrowing'
 
 import { borrow, drop, Ownership, release, take } from 'borrowing'
-
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
-/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 
 // https://vitest.dev/guide/testing-types.html
 
@@ -127,10 +128,11 @@ describe('Usage (provide)', () => {
     let _hidden: any
 
     // @ts-expect-error: protected/private property
+    _hidden = ownership.released
+    // @ts-expect-error: protected/private property
     _hidden = ownership.releasePayload
     _visible = ownership.capture(123)
     _visible = ownership.captured
-    _visible = ownership.released
     _visible = ownership.options
     _visible = ownership.expectPayload()
     _visible = ownership.give()
@@ -138,10 +140,11 @@ describe('Usage (provide)', () => {
 
     const afterCapture = ownership.capture(123 as const)
     // @ts-expect-error: protected/private property
+    _hidden = afterCapture.released
+    // @ts-expect-error: protected/private property
     _hidden = afterCapture.releasePayload
     _visible = afterCapture.capture(123)
     _visible = afterCapture.captured
-    _visible = afterCapture.released
     _visible = afterCapture.options
     _visible = afterCapture.expectPayload()
     _visible = afterCapture.give()
@@ -245,9 +248,11 @@ describe('Usage (consume)', () => {
       _hidden = ownership.give()
       // @ts-expect-error: protected/private property
       _hidden = ownership.take()
+      // @ts-expect-error: protected/private property
+      _hidden = ownership.released
+      // @ts-expect-error: protected/private property
+      _hidden = ownership.releasePayload
       _visible = ownership.captured
-      _visible = ownership.released
-      _visible = ownership.releasePayload
 
       drop(ownership)
       expectTypeOf(ownership).toBeNever()

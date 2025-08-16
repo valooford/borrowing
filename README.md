@@ -68,7 +68,99 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 
 ---
 
-(\*) - Using `take()` is preferred over `Ownership#take()`
+# Table of Contents
+
+- [Resources](#resources)
+- [API Reference](#api-reference)
+  - [`Ownership`](#ownership)
+    - [`Ownership#options`](#ownershipoptions)
+    - [`ConsumerOwnership#captured`](#consumerownershipcaptured)
+    - [`Ownership#capture()`](#ownershipcapture)
+    - [`Ownership#expectPayload()`](#ownershipexpectpayload)
+    - [`Ownership#give()`](#ownershipgive)
+    - [`Ownership#take()`](#ownershiptake)
+    - [Utility Types](#utility-types)
+  - [`borrow`](#borrow)
+  - [`release`](#release)
+  - [`drop`](#drop)
+  - [`take`](#take)
+
+## Resources
+
+- [Assertion functions in TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions)
+
+> [!tip]
+>
+> Use in combination with `no-unsafe-*`-rules from [`typescript-eslint`](https://typescript-eslint.io/), such as [`no-unsafe-call`](https://typescript-eslint.io/rules/no-unsafe-call/).  
+> This prevents further use of the Ownership instance, either after calling `take()` or after any other assertion that results in `never`.
+
+## API Reference
+
+### `Ownership`
+
+> [**Ownership**](https://github.com/valooford/borrowing/blob/main/src/ownership/ownership.ts)([options?](#ownershipoptions)): `Ownership<General, Captured, Released, State, ReleasePayload>`
+
+**@summary**
+
+A constructor of primitives that define ownership over a value of a particular type. \
+The General type of the value is specified in the generic parameter list.
+
+**@description**
+
+It is the source and target type of assertion functions.
+
+In combination with assertion functions, it implements borrowing mechanisms through modification of its own type. \
+The type of `Ownership` instance reflects both the type of the captured value and the borrowing state.
+
+#### `Ownership#options`
+
+**@summary**
+
+Allows to customize aspects of how borrowing mechanisms work at runtime. \
+Are public before any use of the `Ownership` instance.
+
+| Option            | Type      | Default | Description                                                                               |
+| ----------------- | --------- | ------- | ----------------------------------------------------------------------------------------- |
+| throwOnWrongState | `boolean` | `true`  | Throw error when ownership/borrowing state changes fail via built-in assertion functions. |
+
+#### `ConsumerOwnership#captured`
+
+**@summary**
+
+Contains the captured value until the `Ownership` instance is processed by the assertion function. \
+Is public inside the assertion function. In external code, retrieved via the `take()` function or method.
+
+#### `Ownership#capture()`
+
+**@summary**
+
+Sets the value over which ownership is defined. \
+It is recommended to use the literal form of the value in combination with the `as const` assertion.
+
+#### `Ownership#expectPayload()`
+
+**@summary**
+
+Specifies for an `Ownership` instance the type of value
+that can be passed from the assertion function during its execution.
+
+#### `Ownership#give()`
+
+**@summary**
+
+Prepares an `Ownership` instance to be given into the assertion function.
+
+#### `Ownership#take()`
+
+**@summary**
+
+Retrieves the captured value. \
+After retrieval, the `Ownership` instance no longer contains a value.
+
+**@description**
+
+The `take` method does not invalidate the `Ownership` instance. \
+For this reason, it is recommended to use the `take()` function.
 
 ```ts
 import { take } from 'borrowing'
@@ -80,65 +172,16 @@ let morphedValue = ownership.take()
 take(ownership, (str) => (morphedValue = str))
 ```
 
-> [!tip]
->
-> Use in combination with `no-unsafe-*`-rules from [`typescript-eslint`](https://typescript-eslint.io/), such as [`no-unsafe-call`](https://typescript-eslint.io/rules/no-unsafe-call/).  
-> This prevents further use of the Ownership instance, either after calling `take()` or after any other assertion that results in `never`.
-
-# Table of Contents
-
-- [Resources](#resources)
-- [API Reference](#api-reference)
-  - [`Ownership`](#ownership)
-    - [`Ownership#captured`](#ownershipcaptured)
-    - [`Ownership#released`](#ownershipreleased)
-    - [`ConsumerOwnership#releasePayload`](#consumerownershipreleasepayload)
-    - [`Ownership#options`](#ownershipoptions)
-    - [`Ownership#capture()`](#ownershipcapture)
-    - [`Ownership#expectPayload()`](#ownershipexpectpayload)
-    - [`Ownership#give()`](#ownershipgive)
-    - [`Ownership#take()`](#ownershiptake)
-    - [`Ownership` Utility Types](#utility-types)
-  - [`borrow`](#borrow)
-  - [`release`](#release)
-  - [`drop`](#drop)
-  - [`take`](#take)
-
-## Resources
-
-- [Assertion functions in TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions)
-
-## API Reference
-
-### `Ownership`
-
-#### `Ownership#captured`
-
-#### `Ownership#released`
-
-#### `ConsumerOwnership#releasePayload`
-
-#### `Ownership#options`
-
-#### `Ownership#capture()`
-
-#### `Ownership#expectPayload()`
-
-#### `Ownership#give()`
-
-#### `Ownership#take()`
-
 #### Utility Types
 
-| `Ownership` namespace                 |
-| ------------------------------------- |
-| `Ownership.Options`                   |
-| `Ownership.infer<T>`                  |
-| `Ownership.inferTypes<T>`             |
-| `Ownership.GenericBounds<G,RP,C,R,S>` |
-| `Ownership.ParamsBounds<T>`           |
-| `Ownership.MorphAssertion<T,R>`       |
-| `Ownership.LeaveAssertion<T>`         |
+| `Ownership` namespace                             | Description                                                                                                                                                                                                                        |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Ownership.Options`                               | Runtime borrowing mechanism settings.                                                                                                                                                                                              |
+| `Ownership.inferTypes<T>`                         | The instance parameter types individually, such as `inferTypes<typeof ownership>['Captured']`.                                                                                                                                     |
+| `Ownership.GenericBounds<General,ReleasePayload>` | For use in the parameter list of a generic assertion function to perform a mapping from the type of the actual `Ownership` instance passed.<br>The resulting type is a structure convenient for use in `*Assertion` utility types. |
+| `Ownership.ParamsBounds<GenericBounds>`           | For use as the type of an assertion function parameter that takes an `Ownership` instance.<br>A generic parameter extending `GenericBounds` is passed inside to ensure successful mapping.                                         |
+| `Ownership.MorphAssertion<GenericBounds,Release>` | The target type of an assertion function that results in `Ownership` with a potentially morphed type of the captured value.                                                                                                        |
+| `Ownership.LeaveAssertion<GenericBounds>`         | The target type of an assertion function that consumes a borrowed value completely and invalidates the `Ownership` type.                                                                                                           |
 
 [Scroll Up ↩](#table-of-contents)
 

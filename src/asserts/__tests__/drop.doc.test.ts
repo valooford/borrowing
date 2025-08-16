@@ -1,6 +1,6 @@
-import { borrow, drop, Ownership, release } from 'borrowing'
-
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
+
+import { borrow, drop, Ownership, release } from 'borrowing'
 
 // file://./../drop.ts
 // file://./../../../README.md#drop

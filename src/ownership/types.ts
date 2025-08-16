@@ -12,9 +12,6 @@ export interface Options {
 export type State = 'given' | 'borrowed' | 'settled'
 export type TypeState = State | 'unknown'
 
-type inferReleased<T> = T extends BaseOwnership<any, any, infer R, any, any> ? R : never
-export type _infer<T> = inferReleased<T>
-
 export type _inferTypes<T extends AnyOwnership> =
   T extends BaseOwnership<infer General, infer Captured, infer Released, infer State, infer ReleasePayload>
     ? {

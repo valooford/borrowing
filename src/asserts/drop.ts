@@ -63,7 +63,7 @@ import { isOwnership } from '@ownership/utils/isOwnership'
  * }
  * ```
  *
- * @see https://github.com/valooford/borrowing/blob/main/README.md#drop
+ * @see https://github.com/valooford/borrowing#drop
  */
 export function drop<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.ParamsBounds<T>,

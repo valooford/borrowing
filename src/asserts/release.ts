@@ -54,7 +54,7 @@ import { isFunction } from '@shared/utils'
  * }
  * ```
  *
- * @see https://github.com/valooford/borrowing/blob/main/README.md#release
+ * @see https://github.com/valooford/borrowing#release
  */
 export function release<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.ParamsBounds<T>,
