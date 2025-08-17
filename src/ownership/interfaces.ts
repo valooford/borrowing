@@ -9,6 +9,13 @@ import { BaseOwnership } from './ownership'
  * A constructor of primitives that define ownership over a value of a particular type. \
  * The General type of the value is specified in the generic parameter list.
  *
+ * @example
+ *
+ * ```ts
+ * type Status = 'pending' | 'success' | 'error'
+ * const ownership = new Ownership<Status>({ throwOnWrongState: false }) // type `Ownership<Status, unknown, ...>`
+ * ```
+ *
  * @description
  *
  * It is the source and target type of assertion functions.
@@ -32,6 +39,21 @@ export class Ownership<
    * Contains the captured value until the `Ownership` instance is processed by the assertion function. \
    * Is public inside the assertion function. In external code, retrieved via the `take()` function or method.
    *
+   * @example
+   *
+   * ```ts
+   * type Status = 'pending' | 'success' | 'error'
+   * const ownership = new Ownership<Status>().capture('pending' as const)
+   * const captured = ownership.captured // type 'pending'
+   *
+   * function _assert<T extends Ownership.GenericBounds<Status>>(
+   *   ownership: Ownership.ParamsBounds<T> | undefined,
+   * ): asserts ownership is Ownership.LeaveAssertion<T> {
+   *   borrow(ownership)
+   *   const captured = ownership.captured // type `Status`
+   * }
+   * ```
+   *
    * @see https://github.com/valooford/borrowing#consumerownershipcaptured
    */
   declare readonly captured: Captured
@@ -54,6 +76,13 @@ export class Ownership<
    * Sets the value over which ownership is defined. \
    * It is recommended to use the literal form of the value in combination with the `as const` assertion.
    *
+   * @example
+   *
+   * ```ts
+   * type Status = 'pending' | 'success' | 'error'
+   * const ownership = new Ownership<Status>().capture('pending' as const) // type `Ownership<Status, 'pending', ...>`
+   * ```
+   *
    * @see https://github.com/valooford/borrowing#ownershipcapture
    */
   public override capture<Captured>(value: Captured) {
@@ -65,6 +94,20 @@ export class Ownership<
    * Specifies for an `Ownership` instance the type of value
    * that can be passed from the assertion function during its execution.
    *
+   * @example
+   *
+   * ```ts
+   * const acceptExitCode = ownership.expectPayload<0 | 1>().give()
+   * _assert(acceptExitCode)
+   *
+   * function _assert<T extends Ownership.GenericBounds<number, 0 | 1>>(
+   *   ownership: Ownership.ParamsBounds<T> | undefined,
+   * ): asserts ownership is Ownership.LeaveAssertion<T> {
+   *   borrow(ownership)
+   *   drop(ownership, 0)
+   * }
+   * ```
+   *
    * @see https://github.com/valooford/borrowing#ownershipexpectpayload
    */
   public override expectPayload<ReleasePayload>() {
@@ -74,6 +117,23 @@ export class Ownership<
    * @summary
    *
    * Prepares an `Ownership` instance to be given into the assertion function.
+   *
+   * @example
+   *
+   * ```ts
+   * const ownership = new Ownership<string>().capture('pending' as const)
+   * const ownershipArg = ownership.give()
+   * _assert(ownership)
+   * ownership // type `never`
+   * _assert(ownershipArg)
+   * ownershipArg // type `ProviderOwnership<...>`
+   *
+   * function _assert<T extends Ownership.GenericBounds<string>>(
+   *   ownership: Ownership.ParamsBounds<T> | undefined,
+   * ): asserts ownership is Ownership.MorphAssertion<T, 'success'> {
+   *   // (...)
+   * }
+   * ```
    *
    * @see https://github.com/valooford/borrowing#ownershipgive
    */
@@ -86,19 +146,26 @@ export class Ownership<
    * Retrieves the captured value. \
    * After retrieval, the `Ownership` instance no longer contains a value.
    *
+   * @example
+   *
+   * ```ts
+   * type Status = 'pending' | 'success' | 'error'
+   * const ownership = new Ownership<Status>().capture('pending' as const)
+   * let _value = ownership.take() // 'pending'
+   * _value = ownership.take() // undefined
+   * ```
+   *
    * @description
    *
    * The `take` method does not invalidate the `Ownership` instance. \
    * For this reason, it is recommended to use the `take()` function.
    *
    * ```ts
-   * import { take } from 'borrowing'
-   *
    * // unsafe because the ownership is still in use (not `undefined` or `never`)
-   * let morphedValue = ownership.take()
+   * _morphedValue = ownership.take()
    *
    * // safer alternative - asserts `ownership is never`
-   * take(ownership, (str) => (morphedValue = str))
+   * take(ownership, (str) => void (_morphedValue = str))
    * ```
    *
    * @see https://github.com/valooford/borrowing#ownershiptake
@@ -176,6 +243,20 @@ export class ProviderOwnership<
    * Specifies for an `Ownership` instance the type of value
    * that can be passed from the assertion function during its execution.
    *
+   * @example
+   *
+   * ```ts
+   * const acceptExitCode = ownership.expectPayload<0 | 1>().give()
+   * _assert(acceptExitCode)
+   *
+   * function _assert<T extends Ownership.GenericBounds<number, 0 | 1>>(
+   *   ownership: Ownership.ParamsBounds<T> | undefined,
+   * ): asserts ownership is Ownership.LeaveAssertion<T> {
+   *   borrow(ownership)
+   *   drop(ownership, 0)
+   * }
+   * ```
+   *
    * @see https://github.com/valooford/borrowing#ownershipexpectpayload
    */
   public override expectPayload<ReleasePayload>() {
@@ -185,6 +266,23 @@ export class ProviderOwnership<
    * @summary
    *
    * Prepares an `Ownership` instance to be given into the assertion function.
+   *
+   * @example
+   *
+   * ```ts
+   * const ownership = new Ownership<string>().capture('pending' as const)
+   * const ownershipArg = ownership.give()
+   * _assert(ownership)
+   * ownership // type `never`
+   * _assert(ownershipArg)
+   * ownershipArg // type `ProviderOwnership<...>`
+   *
+   * function _assert<T extends Ownership.GenericBounds<string>>(
+   *   ownership: Ownership.ParamsBounds<T> | undefined,
+   * ): asserts ownership is Ownership.MorphAssertion<T, 'success'> {
+   *   // (...)
+   * }
+   * ```
    *
    * @see https://github.com/valooford/borrowing#ownershipgive
    */
@@ -197,19 +295,26 @@ export class ProviderOwnership<
    * Retrieves the captured value. \
    * After retrieval, the `Ownership` instance no longer contains a value.
    *
+   * @example
+   *
+   * ```ts
+   * type Status = 'pending' | 'success' | 'error'
+   * const ownership = new Ownership<Status>().capture('pending' as const)
+   * let _value = ownership.take() // 'pending'
+   * _value = ownership.take() // undefined
+   * ```
+   *
    * @description
    *
    * The `take` method does not invalidate the `Ownership` instance. \
    * For this reason, it is recommended to use the `take()` function.
    *
    * ```ts
-   * import { take } from 'borrowing'
-   *
    * // unsafe because the ownership is still in use (not `undefined` or `never`)
-   * let morphedValue = ownership.take()
+   * _morphedValue = ownership.take()
    *
    * // safer alternative - asserts `ownership is never`
-   * take(ownership, (str) => (morphedValue = str))
+   * take(ownership, (str) => void (_morphedValue = str))
    * ```
    *
    * @see https://github.com/valooford/borrowing#ownershiptake
@@ -231,6 +336,21 @@ export class ConsumerOwnership<
    *
    * Contains the captured value until the `Ownership` instance is processed by the assertion function. \
    * Is public inside the assertion function. In external code, retrieved via the `take()` function or method.
+   *
+   * @example
+   *
+   * ```ts
+   * type Status = 'pending' | 'success' | 'error'
+   * const ownership = new Ownership<Status>().capture('pending' as const)
+   * const captured = ownership.captured // type 'pending'
+   *
+   * function _assert<T extends Ownership.GenericBounds<Status>>(
+   *   ownership: Ownership.ParamsBounds<T> | undefined,
+   * ): asserts ownership is Ownership.LeaveAssertion<T> {
+   *   borrow(ownership)
+   *   const captured = ownership.captured // type `Status`
+   * }
+   * ```
    *
    * @see https://github.com/valooford/borrowing#consumerownershipcaptured
    */

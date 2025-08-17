@@ -105,6 +105,13 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 A constructor of primitives that define ownership over a value of a particular type. \
 The General type of the value is specified in the generic parameter list.
 
+**@example**
+
+```ts
+type Status = 'pending' | 'success' | 'error'
+const ownership = new Ownership<Status>({ throwOnWrongState: false }) // type `Ownership<Status, unknown, ...>`
+```
+
 **@description**
 
 It is the source and target type of assertion functions.
@@ -130,12 +137,34 @@ Are public before any use of the `Ownership` instance.
 Contains the captured value until the `Ownership` instance is processed by the assertion function. \
 Is public inside the assertion function. In external code, retrieved via the `take()` function or method.
 
+**@example**
+
+```ts
+type Status = 'pending' | 'success' | 'error'
+const ownership = new Ownership<Status>().capture('pending' as const)
+const captured = ownership.captured // type 'pending'
+
+function _assert<T extends Ownership.GenericBounds<Status>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.LeaveAssertion<T> {
+  borrow(ownership)
+  const captured = ownership.captured // type `Status`
+}
+```
+
 #### `Ownership#capture()`
 
 **@summary**
 
 Sets the value over which ownership is defined. \
 It is recommended to use the literal form of the value in combination with the `as const` assertion.
+
+**@example**
+
+```ts
+type Status = 'pending' | 'success' | 'error'
+const ownership = new Ownership<Status>().capture('pending' as const) // type `Ownership<Status, 'pending', ...>`
+```
 
 #### `Ownership#expectPayload()`
 
@@ -144,11 +173,42 @@ It is recommended to use the literal form of the value in combination with the `
 Specifies for an `Ownership` instance the type of value
 that can be passed from the assertion function during its execution.
 
+**@example**
+
+```ts
+const acceptExitCode = ownership.expectPayload<0 | 1>().give()
+_assert(acceptExitCode)
+
+function _assert<T extends Ownership.GenericBounds<number, 0 | 1>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.LeaveAssertion<T> {
+  borrow(ownership)
+  drop(ownership, 0)
+}
+```
+
 #### `Ownership#give()`
 
 **@summary**
 
 Prepares an `Ownership` instance to be given into the assertion function.
+
+**@example**
+
+```ts
+const ownership = new Ownership<string>().capture('pending' as const)
+const ownershipArg = ownership.give()
+_assert(ownership)
+ownership // type `never`
+_assert(ownershipArg)
+ownershipArg // type `ProviderOwnership<...>`
+
+function _assert<T extends Ownership.GenericBounds<string>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.MorphAssertion<T, 'success'> {
+  // (...)
+}
+```
 
 #### `Ownership#take()`
 
@@ -157,20 +217,29 @@ Prepares an `Ownership` instance to be given into the assertion function.
 Retrieves the captured value. \
 After retrieval, the `Ownership` instance no longer contains a value.
 
+**@example**
+
+```ts
+type Status = 'pending' | 'success' | 'error'
+const ownership = new Ownership<Status>().capture('pending' as const)
+let _value = ownership.take() // 'pending'
+_value = ownership.take() // undefined
+```
+
 **@description**
 
 The `take` method does not invalidate the `Ownership` instance. \
 For this reason, it is recommended to use the `take()` function.
 
 ```ts
-import { take } from 'borrowing'
-
 // unsafe because the ownership is still in use (not `undefined` or `never`)
-let morphedValue = ownership.take()
+_morphedValue = ownership.take()
 
 // safer alternative - asserts `ownership is never`
-take(ownership, (str) => (morphedValue = str))
+take(ownership, (str) => void (_morphedValue = str))
 ```
+
+[Scroll Up ↩](#table-of-contents)
 
 #### Utility Types
 
@@ -182,6 +251,30 @@ take(ownership, (str) => (morphedValue = str))
 | `Ownership.ParamsBounds<GenericBounds>`           | For use as the type of an assertion function parameter that takes an `Ownership` instance.<br>A generic parameter extending `GenericBounds` is passed inside to ensure successful mapping.                                         |
 | `Ownership.MorphAssertion<GenericBounds,Release>` | The target type of an assertion function that results in `Ownership` with a potentially morphed type of the captured value.                                                                                                        |
 | `Ownership.LeaveAssertion<GenericBounds>`         | The target type of an assertion function that consumes a borrowed value completely and invalidates the `Ownership` type.                                                                                                           |
+
+**@example**
+
+```ts
+const options: Ownership.Options = {
+  throwOnWrongState: false,
+}
+const _ownership = new Ownership<string>(options).capture('foo' as const)
+type Captured = Ownership.inferTypes<typeof _ownership>['Captured'] // 'foo'
+
+function _assert<T extends Ownership.GenericBounds<string>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.MorphAssertion<T, string> {
+  // (...)
+  release(ownership, 'bar')
+}
+function _throwAway<T extends Ownership.GenericBounds<string, 0 | 1>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.LeaveAssertion<T> {
+  borrow(ownership)
+  type Payload = Ownership.inferTypes<typeof ownership>['ReleasePayload'] // 0 | 1
+  drop(ownership, 0)
+}
+```
 
 [Scroll Up ↩](#table-of-contents)
 

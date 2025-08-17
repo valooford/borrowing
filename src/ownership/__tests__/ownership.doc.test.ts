@@ -1,0 +1,79 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+import { borrow, Ownership, take } from 'borrowing'
+
+// file://./../interfaces.ts
+// file://./../../../README.md#ownership
+// file://./../../../README.ru-RU.md#ownership
+describe('Ownership', () => {
+  describe('constructor', () => {
+    test('@example', () => {
+      type Status = 'pending' | 'success' | 'error'
+      const ownership = new Ownership<Status>({ throwOnWrongState: false }).give()
+      expect(() => take(ownership, () => void 0)).not.toThrow()
+    })
+  })
+  describe('#captured', () => {
+    test('@example', () => {
+      type Status = 'pending' | 'success' | 'error'
+      const ownership = new Ownership<Status>().capture('pending' as const)
+      // TODO: enable when `Released` is removed
+      // expect(ownership.captured).toBe('pending')
+      _assert(ownership.give())
+
+      function _assert<T extends Ownership.GenericBounds<Status>>(
+        ownership: Ownership.ParamsBounds<T> | undefined,
+      ): asserts ownership is Ownership.LeaveAssertion<T> {
+        borrow(ownership)
+        expect(ownership.captured).toBe('pending')
+      }
+    })
+  })
+  describe('#capture()', () => {
+    // TODO: enable when `Released` is removed
+    test.skip('@example', () => {
+      type Status = 'pending' | 'success' | 'error'
+      const ownership = new Ownership<Status>().capture('pending' as const)
+      expect(ownership.captured).toBe('pending')
+    })
+  })
+  describe('#expectPayload()', () => {
+    // TODO: check payload
+    test.todo('@example')
+  })
+  describe('#give()', () => {
+    test('@example', () => {
+      const ownership = new Ownership<string>().capture('pending' as const)
+      expect(() => _assert(ownership)).toThrow('Unable to borrow (not given), call `give` first')
+      const ownershipArg = ownership.give()
+      expect(() => _assert(ownershipArg)).not.toThrow()
+
+      function _assert<T extends Ownership.GenericBounds<string>>(
+        ownership: Ownership.ParamsBounds<T> | undefined,
+      ): asserts ownership is Ownership.MorphAssertion<T, 'success'> {
+        borrow(ownership)
+      }
+    })
+  })
+  describe('#take()', () => {
+    test('@example', () => {
+      type Status = 'pending' | 'success' | 'error'
+      const ownership = new Ownership<Status>().capture('pending' as const)
+      let _value = ownership.take()
+      expect(_value).toBe('pending')
+      _value = ownership.take()
+      expect(_value).toBe(undefined)
+    })
+    {
+      const ownership = new Ownership().capture(123)
+      let _morphedValue: any
+      // TODO: enable when `Released` is removed
+      test.skip('@description', () => {
+        _morphedValue = ownership.take()
+        expect(_morphedValue).toBe(123)
+
+        take(ownership, (str) => void (_morphedValue = str))
+        expect(_morphedValue).toBeUndefined()
+      })
+    }
+  })
+})

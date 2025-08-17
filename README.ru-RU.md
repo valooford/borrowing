@@ -108,6 +108,13 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 Конструктор примитивов, определяющих владение над значением определенного типа. \
 Общий (General) тип значения указывается в списке параметров дженерика.
 
+**@example**
+
+```ts
+type Status = 'pending' | 'success' | 'error'
+const ownership = new Ownership<Status>({ throwOnWrongState: false }) // тип `Ownership<Status, unknown, ...>`
+```
+
 **@description**
 
 Является исходным и целевым типом assertion функций.
@@ -135,12 +142,34 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 не будет обработан assertion функцией. \
 Доступен внутри assertion функции. Во внешнем коде извлекается через функцию или метод `take()`.
 
+**@example**
+
+```ts
+type Status = 'pending' | 'success' | 'error'
+const ownership = new Ownership<Status>().capture('pending' as const)
+const captured = ownership.captured // тип 'pending'
+
+function _assert<T extends Ownership.GenericBounds<Status>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.LeaveAssertion<T> {
+  borrow(ownership)
+  const captured = ownership.captured // тип `Status`
+}
+```
+
 #### `Ownership#capture()`
 
 **@summary**
 
 Устанавливает значение, над которым определено владение. \
 Рекомендуется использование литеральной формы значения в паре с утверждением `as const`.
+
+**@example**
+
+```ts
+type Status = 'pending' | 'success' | 'error'
+const ownership = new Ownership<Status>().capture('pending' as const) // тип `Ownership<Status, 'pending', ...>`
+```
 
 #### `Ownership#expectPayload()`
 
@@ -149,11 +178,42 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 Определяет для экземпляра `Ownership` тип значения,
 которое может быть передано assertion функцией в ходе ее выполнения.
 
+**@example**
+
+```ts
+const acceptExitCode = ownership.expectPayload<0 | 1>().give()
+_assert(acceptExitCode)
+
+function _assert<T extends Ownership.GenericBounds<number, 0 | 1>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.LeaveAssertion<T> {
+  borrow(ownership)
+  drop(ownership, 0)
+}
+```
+
 #### `Ownership#give()`
 
 **@summary**
 
 Подготавливает экземпляр `Ownership` к передаче внутрь assertion функции.
+
+**@example**
+
+```ts
+const ownership = new Ownership<string>().capture('pending' as const)
+const ownershipArg = ownership.give()
+_assert(ownership)
+ownership // тип `never`
+_assert(ownershipArg)
+ownershipArg // тип `ProviderOwnership<...>`
+
+function _assert<T extends Ownership.GenericBounds<string>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.MorphAssertion<T, 'success'> {
+  // (...)
+}
+```
 
 #### `Ownership#take()`
 
@@ -162,20 +222,29 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 Извлекает заимствованное (captured) значение. \
 После извлечения экземпляр `Ownership` больше не содержит значения.
 
+**@example**
+
+```ts
+type Status = 'pending' | 'success' | 'error'
+const ownership = new Ownership<Status>().capture('pending' as const)
+let _value = ownership.take() // 'pending'
+_value = ownership.take() // undefined
+```
+
 **@description**
 
 Метод `take` не инвалидирует экземпляр `Ownership`. \
 По этой причине рекомендуется использование функции `take()`.
 
 ```ts
-import { take } from 'borrowing'
-
 // небезопасно, т.к. `ownership` все еще доступен для использования (не приведен к `undefined` или `never`)
-let morphedValue = ownership.take()
+_morphedValue = ownership.take()
 
 // безопасная альтернатива - приводит (asserts) `ownership` к `never`
-take(ownership, (str) => (morphedValue = str))
+take(ownership, (str) => void (_morphedValue = str))
 ```
+
+[К содержимому ↩](#содержимое)
 
 #### Вспомогательные типы
 
@@ -187,6 +256,30 @@ take(ownership, (str) => (morphedValue = str))
 | `Ownership.ParamsBounds<GenericBounds>`           | Для использования в качестве типа параметра assertion функции, принимающего экземпляр `Ownership`.<br>Внутрь передается дженерик параметр для успешного маппинга в `GenericBounds`.                                                                |
 | `Ownership.MorphAssertion<GenericBounds,Release>` | Целевой тип assertion функции, возвращающей `Ownership` с потенциально видоизмененным типом заимствованного (captured) значения.                                                                                                                   |
 | `Ownership.LeaveAssertion<GenericBounds>`         | Целевой тип assertion функции, поглощающей заимствованное значение и инвалидирующей тип `Ownership`.                                                                                                                                               |
+
+**@example**
+
+```ts
+const options: Ownership.Options = {
+  throwOnWrongState: false,
+}
+const _ownership = new Ownership<string>(options).capture('foo' as const)
+type Captured = Ownership.inferTypes<typeof _ownership>['Captured'] // 'foo'
+
+function _assert<T extends Ownership.GenericBounds<string>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.MorphAssertion<T, string> {
+  // (...)
+  release(ownership, 'bar')
+}
+function _throwAway<T extends Ownership.GenericBounds<string, 0 | 1>>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+): asserts ownership is Ownership.LeaveAssertion<T> {
+  borrow(ownership)
+  type Payload = Ownership.inferTypes<typeof ownership>['ReleasePayload'] // 0 | 1
+  drop(ownership, 0)
+}
+```
 
 [К содержимому ↩](#содержимое)
 
