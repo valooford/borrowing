@@ -31,6 +31,7 @@
     "type": "git",
     "url": "git+https://github.com/valooford/borrowing.git"
   },
+  "funding": "https://github.com/valooford/valooford#support",
   "homepage": "https://github.com/valooford/borrowing#readme",
   "devDependencies": {
     "@eslint/js": "^9.32.0",
