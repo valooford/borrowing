@@ -28,7 +28,7 @@ export class BaseOwnership<
       throwOnWrongState: options?.throwOnWrongState ?? this.options.throwOnWrongState,
     }
   }
-  protected capture<Captured>(value: Captured) {
+  protected capture<Captured extends General>(value: Captured) {
     const self = this as unknown as InternalConsumerOwnership<General, Captured, State, ReleasePayload>
     self.captured = value
     return self as unknown as Ownership<General, Captured, State, ReleasePayload>

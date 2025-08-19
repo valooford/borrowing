@@ -84,7 +84,7 @@ export class Ownership<
    *
    * @see https://github.com/valooford/borrowing#ownershipcapture
    */
-  public override capture<Captured>(value: Captured) {
+  public override capture<Captured extends General>(value: Captured) {
     return super.capture(value)
   }
   /**

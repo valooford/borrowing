@@ -9,7 +9,6 @@ import { take } from '@asserts/take'
 import { Ownership } from '../interfaces'
 
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 
@@ -72,6 +71,9 @@ describe('Ownership', () => {
       {
         /* test */
         expectTypeOf(captured).toEqualTypeOf<'pending'>()
+
+        // @ts-expect-error: the value type should be assignable to `Status`
+        ownership.capture('unknown' as const)
       }
 
       function _assert<T extends Ownership.GenericBounds<Status>>(

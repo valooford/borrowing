@@ -1,5 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 
 import type { Branded } from 'borrowing'
 
