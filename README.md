@@ -186,6 +186,9 @@ that can be passed from the assertion function during its execution.
 ```ts
 const acceptExitCode = ownership.expectPayload<0 | 1>().give()
 _assert(acceptExitCode)
+take(acceptExitCode, (_, payload) => {
+  payload // 0
+})
 
 function _assert<T extends Ownership.GenericBounds<number, 0 | 1>>(
   ownership: Ownership.ParamsBounds<T> | undefined,
