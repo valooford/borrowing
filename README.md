@@ -133,9 +133,10 @@ The type of `Ownership` instance reflects both the type of the captured value an
 Allows to customize aspects of how borrowing mechanisms work at runtime. \
 Are public before any use of the `Ownership` instance.
 
-| Option            | Type      | Default | Description                                                                               |
-| ----------------- | --------- | ------- | ----------------------------------------------------------------------------------------- |
-| throwOnWrongState | `boolean` | `true`  | Throw error when ownership/borrowing state changes fail via built-in assertion functions. |
+| Option            | Type      | Default     | Description                                                                                          |
+| ----------------- | --------- | ----------- | ---------------------------------------------------------------------------------------------------- |
+| throwOnWrongState | `boolean` | `true`      | Throw error when ownership/borrowing state changes fail via built-in assertion functions.            |
+| takenPlaceholder  | `any`     | `undefined` | Override an "empty" value for `Ownership`. Useful if the captured value's type includes `undefined`. |
 
 #### `ConsumerOwnership#captured`
 
@@ -264,6 +265,7 @@ take(ownership, (str) => void (_morphedValue = str))
 ```ts
 const options: Ownership.Options = {
   throwOnWrongState: false,
+  takenPlaceholder: undefined,
 }
 const _ownership = new Ownership<string>(options).capture('foo' as const)
 type Captured = Ownership.inferTypes<typeof _ownership>['Captured'] // 'foo'
@@ -486,9 +488,6 @@ After retrieval, the `Ownership` instance no longer contains a value and is of t
 const ownership = new Ownership<number>().capture(123 as const)
 let _dst: number
 take(ownership, (value) => (_dst = value))
-// or
-const dst: { current?: number } = {}
-take(ownership, dst, 'current')
 ```
 
 **@description**
@@ -497,11 +496,10 @@ The `take` function invalidates the `Ownership` parameter by narrowing it to `ne
 For this reason, it is recommended to use it instead of `Ownership#take()`.
 
 ```ts
-const _dst = ownership.take()
+let _dst = ownership.take()
 ownership // type `Ownership<...>`
 // safe
-const dst: { current?: number } = {}
-take(ownership, dst, 'current')
+take(ownership, (value) => (_dst = value))
 ownership // type `never`
 ```
 
@@ -513,16 +511,16 @@ if ownership of the value has not yet been returned as a result of sequential `g
 This is due to internal tracking of the ownership/borrowing status.
 
 ```ts
-const ownership = new Ownership<number>().capture(123 as number).give()
-take(ownership, dst) // Error: Unable to take (not settled), call `release` or `drop` first or remove `give` call
+const ownership = new Ownership<number>().capture(123 as const).give()
+take(ownership, (value) => (_dst = value)) // Error: Unable to take (not settled), call `release` or `drop` first or remove `give` call
 ```
 
 Also throws 'Unable to take (already taken)' error when trying to call again on the same `Ownership` instance.
 
 ```ts
-declare let ownership: ProviderOwnership<...>
-take(ownership, dst)
-take(ownership, dst) // Error: Unable to take (already taken)
+const ownership = new Ownership<number>().capture(123 as const)
+take(ownership, (value) => (_dst = value))
+take(ownership, (value) => (_dst = value)) // Error: Unable to take (already taken)
 ```
 
 [Scroll Up ↩](#table-of-contents)

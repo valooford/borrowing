@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-import { borrow, Ownership, take } from 'borrowing'
+import { borrow, drop, Ownership, take } from 'borrowing'
 
 // file://./../interfaces.ts
 // file://./../../../README.md#ownership
@@ -35,8 +35,23 @@ describe('Ownership', () => {
     })
   })
   describe('#expectPayload()', () => {
-    // TODO: check payload
-    test.todo('@example')
+    {
+      const ownership = new Ownership<number>().capture(123 as const)
+      test('@example', () => {
+        const acceptExitCode = ownership.expectPayload<0 | 1>().give()
+        _assert(acceptExitCode)
+        take(acceptExitCode, (_, payload) => {
+          expect(payload).toBe(0)
+        })
+
+        function _assert<T extends Ownership.GenericBounds<number, 0 | 1>>(
+          ownership: Ownership.ParamsBounds<T> | undefined,
+        ): asserts ownership is Ownership.LeaveAssertion<T> {
+          borrow(ownership)
+          drop(ownership, 0)
+        }
+      })
+    }
   })
   describe('#give()', () => {
     test('@example', () => {

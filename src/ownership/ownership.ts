@@ -8,7 +8,6 @@ export class BaseOwnership<
   State extends OwnershipTypes.TypeState = Branded<'settled', 'released'>,
   ReleasePayload = unknown,
 > {
-  // @ts-expect-error: undefined is acceptable before `capture` method call
   protected captured: Captured
   // @ts-expect-error: undefined is acceptable before `release` assertion call
   protected releasePayload: ReleasePayload
@@ -21,12 +20,18 @@ export class BaseOwnership<
   }
   protected options: OwnershipTypes.Options = {
     throwOnWrongState: true,
+    takenPlaceholder: undefined,
   }
-  constructor(options?: OwnershipTypes.Options) {
+  constructor(options?: Partial<OwnershipTypes.Options>) {
     this.options = {
       ...this.options,
       throwOnWrongState: options?.throwOnWrongState ?? this.options.throwOnWrongState,
+      takenPlaceholder:
+        options && Object.hasOwn(options, 'takenPlaceholder')
+          ? options.takenPlaceholder
+          : this.options.takenPlaceholder,
     }
+    this.captured = this.options.takenPlaceholder
   }
   protected capture<Captured extends General>(value: Captured) {
     const self = this as unknown as InternalConsumerOwnership<General, Captured, State, ReleasePayload>

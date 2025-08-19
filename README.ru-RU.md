@@ -137,9 +137,10 @@ const ownership = new Ownership<Status>({ throwOnWrongState: false }) // тип 
 Позволяет настраивать аспекты работы механизмов заимствования в рантайме. \
 Доступны для чтения/записи прежде любого использования экземпляра `Ownership`.
 
-| Настройка         | Тип       | Значение по умолчанию | Описание                                                                                                          |
-| ----------------- | --------- | --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| throwOnWrongState | `boolean` | `true`                | Включает выброс ошибок при неудавшейся смене состояния владения/заимствования через встроенные assertion функции. |
+| Настройка         | Тип       | Значение по умолчанию | Описание                                                                                                               |
+| ----------------- | --------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| throwOnWrongState | `boolean` | `true`                | Включает выброс ошибок при неудавшейся смене состояния владения/заимствования через встроенные assertion функции.      |
+| takenPlaceholder  | `any`     | `undefined`           | Переопределяет "пустое" значение для `Ownership`. Полезно, если тип захваченного значения включает в себя `undefined`. |
 
 #### `ConsumerOwnership#captured`
 
@@ -269,6 +270,7 @@ take(ownership, (str) => void (_morphedValue = str))
 ```ts
 const options: Ownership.Options = {
   throwOnWrongState: false,
+  takenPlaceholder: undefined,
 }
 const _ownership = new Ownership<string>(options).capture('foo' as const)
 type Captured = Ownership.inferTypes<typeof _ownership>['Captured'] // 'foo'
@@ -491,9 +493,6 @@ function _assert<T extends Ownership.GenericBounds>(
 const ownership = new Ownership<number>().capture(123 as const)
 let _dst: number
 take(ownership, (value) => (_dst = value))
-// or
-const dst: { current?: number } = {}
-take(ownership, dst, 'current')
 ```
 
 **@description**
@@ -502,11 +501,10 @@ take(ownership, dst, 'current')
 По этой причине она рекомендуется к использованию вместо `Ownership#take()`.
 
 ```ts
-const _dst = ownership.take()
+let _dst = ownership.take()
 ownership // тип `Ownership<...>`
 // безопасный вариант
-const dst: { current?: number } = {}
-take(ownership, dst, 'current')
+take(ownership, (value) => (_dst = value))
 ownership // тип `never`
 ```
 
@@ -518,16 +516,16 @@ ownership // тип `never`
 Это связано с внутренним отслеживанием состояния владения/заимствования.
 
 ```ts
-const ownership = new Ownership<number>().capture(123 as number).give()
-take(ownership, dst) // Ошибка: Unable to take (not settled), call `release` or `drop` first or remove `give` call
+const ownership = new Ownership<number>().capture(123 as const).give()
+take(ownership, (value) => (_dst = value)) // Ошибка: Unable to take (not settled), call `release` or `drop` first or remove `give` call
 ```
 
 Также выбрасывает ошибку 'Unable to take (already taken)' при попытке повторного вызова на том же экземпляре `Ownership`.
 
 ```ts
-declare let ownership: ProviderOwnership<...>
-take(ownership, dst)
-take(ownership, dst) // Ошибка: Unable to take (already taken)
+const ownership = new Ownership<number>().capture(123 as const)
+take(ownership, (value) => (_dst = value))
+take(ownership, (value) => (_dst = value)) // Ошибка: Unable to take (already taken)
 ```
 
 [К содержимому ↩](#содержимое)

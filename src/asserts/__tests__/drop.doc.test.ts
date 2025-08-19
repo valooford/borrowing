@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 
-import { borrow, drop, Ownership, release } from 'borrowing'
+import { borrow, drop, Ownership, release, take } from 'borrowing'
 
 // file://./../drop.ts
 // file://./../../../README.md#drop
@@ -19,8 +19,10 @@ describe('drop', () => {
     }
     const ownership = new Ownership().capture(123).expectPayload<Result>().give()
     _assert(ownership)
-    expect(ownership.take()).toBeUndefined()
-    // TODO: check payload as well
+    take(ownership, (value, payload) => {
+      expect(value).toBeUndefined()
+      expect(payload).toBe(Result.Ok)
+    })
   })
   describe('@description', () => {
     test('1st', () => {
@@ -36,8 +38,10 @@ describe('drop', () => {
       }
       const ownership = new Ownership().capture(123).expectPayload<Result>().give()
       _assert(ownership)
-      expect(ownership.take()).toBeUndefined()
-      // TODO: check payload as well
+      take(ownership, (value, payload) => {
+        expect(value).toBeUndefined()
+        expect(payload).toBe(Result.Ok)
+      })
     })
     {
       test('2nd', () => {

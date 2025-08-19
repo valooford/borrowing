@@ -6,6 +6,7 @@ export type AnyOwnership<T = any> = InternalConsumerOwnership<T, any, any, any> 
 
 export interface Options {
   throwOnWrongState: boolean
+  takenPlaceholder: any
 }
 export type State = 'given' | 'borrowed' | 'settled'
 export type TypeState = State | 'unknown'

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 
@@ -18,22 +17,18 @@ describe('take', () => {
     const ownership = new Ownership<number>().capture(123 as const)
     let _dst: number
     take(ownership, (value) => (_dst = value))
-    // or
-    const dst: { current?: number } = {}
-    take(ownership, dst, 'current')
   })
   {
     const ownership = new Ownership<number, 123>().capture(123 as const)
     test('@description', () => {
-      const _dst = ownership.take()
+      let _dst = ownership.take()
       ownership // type `Ownership<...>`
       {
         /* test */
         expectTypeOf(ownership).toEqualTypeOf<Ownership<number, 123, Branded<'settled', 'released'>, unknown>>()
       }
       // safe
-      const dst: { current?: number } = {}
-      take(ownership, dst, 'current')
+      take(ownership, (value) => (_dst = value))
       ownership // type `never`
       {
         /* test */
@@ -43,18 +38,18 @@ describe('take', () => {
   }
   describe('@throws', () => {
     {
-      const dst: { current?: number } = {}
+      let _dst: number
       test('1st', () => {
-        const ownership = new Ownership<number>().capture(123 as number).give()
-        take(ownership, dst, 'current') // Error: Unable to take (not settled), call `release` or `drop` first or remove `give` call
+        const ownership = new Ownership<number>().capture(123 as const).give()
+        take(ownership, (value) => (_dst = value)) // Error: Unable to take (not settled), call `release` or `drop` first or remove `give` call
       })
     }
     {
-      const dst: { current?: number } = {}
+      let _dst: 123
       test('2nd', () => {
-        const ownership = new Ownership<number>().capture(123 as number)
-        take(ownership, dst, 'current')
-        take(ownership, dst, 'current') // Error: Unable to take (already taken)
+        const ownership = new Ownership<number>().capture(123 as const)
+        take(ownership, (value) => (_dst = value))
+        take(ownership, (value) => (_dst = value)) // Error: Unable to take (already taken)
       })
     }
   })

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
-import { borrow, Ownership, release } from 'borrowing'
+import { borrow, Ownership, release, take } from 'borrowing'
 
 // file://./../release.ts
 // file://./../../../README.md#release
@@ -21,8 +21,10 @@ describe('release', () => {
     }
     const ownership = new Ownership<Status>().capture('open').expectPayload<Result>().give()
     _close(ownership)
-    expect(ownership.take()).toBe('closed')
-    // TODO: check payload as well
+    take(ownership, (value, payload) => {
+      expect(value).toBe('closed')
+      expect(payload).toBe(Result.Ok)
+    })
   })
   test('@description', () => {
     function _assert<T extends Ownership.GenericBounds>(

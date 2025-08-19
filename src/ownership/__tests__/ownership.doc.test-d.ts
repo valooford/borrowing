@@ -34,6 +34,7 @@ describe('Ownership', () => {
     test('@example', () => {
       const options: Ownership.Options = {
         throwOnWrongState: false,
+        takenPlaceholder: undefined,
       }
       const _ownership = new Ownership<string>(options).capture('foo' as const)
       type Captured = Ownership.inferTypes<typeof _ownership>['Captured'] // 'foo'
@@ -100,7 +101,7 @@ describe('Ownership', () => {
   })
   describe('#expectPayload()', () => {
     {
-      const ownership = new Ownership<number>()
+      const ownership = new Ownership<number>().capture(123 as const)
       test('@example', () => {
         const acceptExitCode = ownership.expectPayload<0 | 1>().give()
         _assert(acceptExitCode)

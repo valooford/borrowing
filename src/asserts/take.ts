@@ -1,7 +1,6 @@
 import type * as OwnershipTypes from '@ownership/types'
 
 import { isOwnership } from '@ownership/utils/isOwnership'
-import { isFunction } from '@shared/utils'
 
 /**
  * @summary
@@ -15,9 +14,6 @@ import { isFunction } from '@shared/utils'
  * const ownership = new Ownership<number>().capture(123 as const)
  * let _dst: number
  * take(ownership, (value) => (_dst = value))
- * // or
- * const dst: { current?: number } = {}
- * take(ownership, dst, 'current')
  * ```
  *
  * @description
@@ -26,11 +22,10 @@ import { isFunction } from '@shared/utils'
  * For this reason, it is recommended to use it instead of `Ownership#take()`.
  *
  * ```ts
- * const _dst = ownership.take()
+ * let _dst = ownership.take()
  * ownership // type `Ownership<...>`
  * // safe
- * const dst: { current?: number } = {}
- * take(ownership, dst, 'current')
+ * take(ownership, (value) => (_dst = value))
  * ownership // type `never`
  * ```
  *
@@ -42,36 +37,37 @@ import { isFunction } from '@shared/utils'
  * This is due to internal tracking of the ownership/borrowing status.
  *
  * ```ts
- * const ownership = new Ownership<number>().capture(123 as number).give()
- * take(ownership, dst) // Error: Unable to take (not settled), call `release` or `drop` first or remove `give` call
+ * const ownership = new Ownership<number>().capture(123 as const).give()
+ * take(ownership, (value) => (_dst = value)) // Error: Unable to take (not settled), call `release` or `drop` first or remove `give` call
  * ```
  *
  * Also throws 'Unable to take (already taken)' error when trying to call again on the same `Ownership` instance.
  *
  * ```ts
- * declare let ownership: ProviderOwnership<...>
- * take(ownership, dst)
- * take(ownership, dst) // Error: Unable to take (already taken)
+ * const ownership = new Ownership<number>().capture(123 as const)
+ * take(ownership, (value) => (_dst = value))
+ * take(ownership, (value) => (_dst = value)) // Error: Unable to take (already taken)
  * ```
  *
  * @see https://github.com/valooford/borrowing#take
  */
-export function take<T extends OwnershipTypes._GenericBounds>(
-  ownership: OwnershipTypes.ParamsBounds<T>,
-  receiver: Record<string, T['Captured']> | ((value: T['Captured']) => void),
-  receiverKey?: keyof Exclude<typeof receiver, (...args: any[]) => void>,
+export function take<T extends OwnershipTypes.AnyOwnership, TMap extends OwnershipTypes._inferTypes<T>>(
+  ownership: T | undefined,
+  receiver: (value: NonNullable<TMap['Captured']>, payload: TMap['ReleasePayload']) => void,
 ): asserts ownership is undefined {
-  isOwnership<T>(ownership)
+  isOwnership<TMap>(ownership)
   if (ownership.state !== 'settled' && ownership.options.throwOnWrongState) {
     throw Error('Unable to take (not settled), call `release` or `drop` first or remove `give` call')
   }
-  if (!ownership.captured && ownership.options.throwOnWrongState) {
+  const { takenPlaceholder } = ownership.options
+  if (
+    ownership.captured === takenPlaceholder &&
+    ownership.releasePayload === takenPlaceholder &&
+    ownership.options.throwOnWrongState
+  ) {
     throw Error('Unable to take (already taken)')
   }
-  if (isFunction(receiver)) {
-    receiver(ownership.captured)
-  } else if (receiverKey) {
-    receiver[receiverKey] = ownership.captured
-  }
-  ownership.captured = undefined
+  receiver(ownership.captured, ownership.releasePayload)
+  ownership.captured = takenPlaceholder
+  ownership.releasePayload = takenPlaceholder
 }
