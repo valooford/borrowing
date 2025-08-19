@@ -78,7 +78,6 @@ export function drop<T extends OwnershipTypes._GenericBounds>(
         throw Error('Unable to drop (already settled), call `give` first')
     }
   }
-  ownership.released = undefined
   ownership.captured = undefined
   if (arguments.length == 2) ownership.releasePayload = payload
   ownership.state = 'settled'

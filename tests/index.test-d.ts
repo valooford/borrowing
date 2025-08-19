@@ -1,6 +1,5 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 
 import type { Branded } from 'borrowing'
 
@@ -11,18 +10,15 @@ import { borrow, drop, Ownership, release, take } from 'borrowing'
 describe('Ownership', () => {
   it('should initialize the general type', () => {
     const ownership = new Ownership<number>()
-    expectTypeOf(ownership).toEqualTypeOf<
-      Ownership<number, unknown, unknown, Branded<'settled', 'released'>, unknown>
-    >()
+    expectTypeOf(ownership).toEqualTypeOf<Ownership<number, unknown, Branded<'settled', 'released'>, unknown>>()
   })
   describe('', () => {
-    type Test = Ownership<'first', 'second', 'third', 'unknown', 'fifth'>
+    type Test = Ownership<'first', 'second', 'unknown', 'fourth'>
     expectTypeOf<Ownership.inferTypes<Test>>().toEqualTypeOf<{
       General: 'first'
       Captured: 'second'
-      Released: 'third'
       State: 'unknown'
-      ReleasePayload: 'fifth'
+      ReleasePayload: 'fourth'
     }>()
   })
   it('should capture the constant form of the value', () => {
@@ -128,8 +124,6 @@ describe('Usage (provide)', () => {
     let _hidden: any
 
     // @ts-expect-error: protected/private property
-    _hidden = ownership.released
-    // @ts-expect-error: protected/private property
     _hidden = ownership.releasePayload
     _visible = ownership.capture(123)
     _visible = ownership.captured
@@ -139,8 +133,6 @@ describe('Usage (provide)', () => {
     _visible = ownership.take()
 
     const afterCapture = ownership.capture(123 as const)
-    // @ts-expect-error: protected/private property
-    _hidden = afterCapture.released
     // @ts-expect-error: protected/private property
     _hidden = afterCapture.releasePayload
     _visible = afterCapture.capture(123)
@@ -158,8 +150,6 @@ describe('Usage (provide)', () => {
     // @ts-expect-error: protected/private property
     _hidden = afterGive?.captured
     // @ts-expect-error: protected/private property
-    _visible = afterGive?.released
-    // @ts-expect-error: protected/private property
     _hidden = afterGive?.options
     _visible = afterGive?.expectPayload()
     _visible = afterGive?.give()
@@ -172,8 +162,6 @@ describe('Usage (provide)', () => {
     _hidden = afterGive.capture(123)
     // @ts-expect-error: protected/private property
     _hidden = afterGive.captured
-    // @ts-expect-error: protected/private property
-    _visible = afterGive.released
     // @ts-expect-error: protected/private property
     _hidden = afterGive.options
     _visible = afterGive.expectPayload()
@@ -233,8 +221,6 @@ describe('Usage (consume)', () => {
       // @ts-expect-error: protected/private property
       _hidden = ownership?.captured
       // @ts-expect-error: protected/private property
-      _hidden = ownership?.released
-      // @ts-expect-error: protected/private property
       _hidden = ownership?.releasePayload
 
       borrow(ownership)
@@ -248,8 +234,6 @@ describe('Usage (consume)', () => {
       _hidden = ownership.give()
       // @ts-expect-error: protected/private property
       _hidden = ownership.take()
-      // @ts-expect-error: protected/private property
-      _hidden = ownership.released
       // @ts-expect-error: protected/private property
       _hidden = ownership.releasePayload
       _visible = ownership.captured

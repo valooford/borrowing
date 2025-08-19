@@ -70,8 +70,7 @@ export function release<T extends OwnershipTypes._GenericBounds>(
         throw Error('Unable to release (already settled), call `give` first')
     }
   }
-  ownership.released = isFunction(setValue) ? setValue(ownership.captured) : setValue
-  ownership.captured = undefined
+  ownership.captured = isFunction(setValue) ? setValue(ownership.captured) : setValue
   if (arguments.length == 3) ownership.releasePayload = payload
   ownership.state = 'settled'
 }

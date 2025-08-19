@@ -5,7 +5,7 @@
 [заимствование — англ.]
 
 <p>
-  <a href="https://www.npmjs.com/package/borrowing" >
+  <a href="https://www.npmjs.com/package/borrowing">
     <img alt="npm" src="https://img.shields.io/npm/v/borrowing">
   </a>
 </p>
@@ -39,7 +39,7 @@ let ownership = new Ownership<string>().capture(value).give()
 replaceStr(ownership, 'ИЗМЕН4И8ЫЙ МNР')
 let morphedValue = ownership.take() // новый тип 'ИЗМЕН4И8ЫЙ МNР' | (*)
 
-ownership // тип `Ownership<string, undefined, 'ИЗМЕН4И8ЫЙ МNР', ...>`
+ownership // тип `Ownership<string, 'ИЗМЕН4И8ЫЙ МNР', ...>`
 ownership = ownership.give()
 sendMessage(ownership)
 ownership // новый тип `undefined`
@@ -101,7 +101,7 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 
 ### `Ownership`
 
-> [**Ownership**](https://github.com/valooford/borrowing/blob/main/src/ownership/ownership.ts)([options?](#ownershipoptions)): `Ownership<General, Captured, Released, State, ReleasePayload>`
+> [**Ownership**](https://github.com/valooford/borrowing/blob/main/src/ownership/ownership.ts)([options?](#ownershipoptions)): `Ownership<General, Captured, State, ReleasePayload>`
 
 **@summary**
 

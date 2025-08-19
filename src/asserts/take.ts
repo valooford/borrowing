@@ -58,20 +58,20 @@ import { isFunction } from '@shared/utils'
  */
 export function take<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.ParamsBounds<T>,
-  receiver: Record<string, T['Released']> | ((value: T['Released']) => void),
+  receiver: Record<string, T['Captured']> | ((value: T['Captured']) => void),
   receiverKey?: keyof Exclude<typeof receiver, (...args: any[]) => void>,
 ): asserts ownership is undefined {
   isOwnership<T>(ownership)
   if (ownership.state !== 'settled' && ownership.options.throwOnWrongState) {
     throw Error('Unable to take (not settled), call `release` or `drop` first or remove `give` call')
   }
-  if (!ownership.released && ownership.options.throwOnWrongState) {
+  if (!ownership.captured && ownership.options.throwOnWrongState) {
     throw Error('Unable to take (already taken)')
   }
   if (isFunction(receiver)) {
-    receiver(ownership.released)
+    receiver(ownership.captured)
   } else if (receiverKey) {
-    receiver[receiverKey] = ownership.released
+    receiver[receiverKey] = ownership.captured
   }
-  ownership.released = undefined
+  ownership.captured = undefined
 }

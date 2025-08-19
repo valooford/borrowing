@@ -27,9 +27,7 @@ describe('Ownership', () => {
       const ownership = new Ownership<Status>({ throwOnWrongState: false }) // type `Ownership<Status, unknown, ...>`
       {
         /* test */
-        expectTypeOf(ownership).toEqualTypeOf<
-          Ownership<Status, unknown, unknown, Branded<'settled', 'released'>, unknown>
-        >()
+        expectTypeOf(ownership).toEqualTypeOf<Ownership<Status, unknown, Branded<'settled', 'released'>, unknown>>()
       }
     })
   })
@@ -94,9 +92,7 @@ describe('Ownership', () => {
       const ownership = new Ownership<Status>().capture('pending' as const) // type `Ownership<Status, 'pending', ...>`
       {
         /* test */
-        expectTypeOf(ownership).toEqualTypeOf<
-          Ownership<Status, 'pending', undefined, Branded<'settled', 'released'>, unknown>
-        >()
+        expectTypeOf(ownership).toEqualTypeOf<Ownership<Status, 'pending', Branded<'settled', 'released'>, unknown>>()
       }
     })
   })
@@ -139,7 +135,7 @@ describe('Ownership', () => {
       {
         /* test */
         expectTypeOf(ownership).toBeNever()
-        expectTypeOf(ownershipArg).toEqualTypeOf<ProviderOwnership<string, undefined, 'success', any, any>>()
+        expectTypeOf(ownershipArg).toEqualTypeOf<ProviderOwnership<string, 'success', any, any>>()
       }
     })
   })
@@ -151,14 +147,13 @@ describe('Ownership', () => {
       _value = ownership.take() // undefined
       {
         /* test */
-        // TODO: enable when `Released` is removed
-        // expectTypeOf(_value).toEqualTypeOf<'pending'>()
+        expectTypeOf(_value).toEqualTypeOf<'pending'>()
       }
     })
     {
       const ownership = new Ownership()
       let _morphedValue: any
-      test.todo('@description', () => {
+      test('@description', () => {
         // unsafe because the ownership is still in use (not `undefined` or `never`)
         _morphedValue = ownership.take()
         {

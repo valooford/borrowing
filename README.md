@@ -3,7 +3,7 @@
 # <img src="header.svg" alt="borrowing" style="width: 100%; max-height: 180px">
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/borrowing" >
+  <a href="https://www.npmjs.com/package/borrowing">
     <img alt="npm" src="https://img.shields.io/npm/v/borrowing">
   </a>
 </p>
@@ -37,7 +37,7 @@ let ownership = new Ownership<string>().capture(value).give()
 replaceStr(ownership, 'M0RPH3D W0R1D')
 let morphedValue = ownership.take() // new type 'M0RPH3D W0R1D' | (*)
 
-ownership // type `Ownership<string, undefined, 'M0RPH3D W0R1D', ...>`
+ownership // type `Ownership<string, 'M0RPH3D W0R1D', ...>`
 ownership = ownership.give()
 sendMessage(ownership)
 ownership // new type `undefined`
@@ -98,7 +98,7 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 
 ### `Ownership`
 
-> [**Ownership**](https://github.com/valooford/borrowing/blob/main/src/ownership/ownership.ts)([options?](#ownershipoptions)): `Ownership<General, Captured, Released, State, ReleasePayload>`
+> [**Ownership**](https://github.com/valooford/borrowing/blob/main/src/ownership/ownership.ts)([options?](#ownershipoptions)): `Ownership<General, Captured, State, ReleasePayload>`
 
 **@summary**
 

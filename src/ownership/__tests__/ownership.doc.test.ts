@@ -16,8 +16,7 @@ describe('Ownership', () => {
     test('@example', () => {
       type Status = 'pending' | 'success' | 'error'
       const ownership = new Ownership<Status>().capture('pending' as const)
-      // TODO: enable when `Released` is removed
-      // expect(ownership.captured).toBe('pending')
+      expect(ownership.captured).toBe('pending')
       _assert(ownership.give())
 
       function _assert<T extends Ownership.GenericBounds<Status>>(
@@ -29,8 +28,7 @@ describe('Ownership', () => {
     })
   })
   describe('#capture()', () => {
-    // TODO: enable when `Released` is removed
-    test.skip('@example', () => {
+    test('@example', () => {
       type Status = 'pending' | 'success' | 'error'
       const ownership = new Ownership<Status>().capture('pending' as const)
       expect(ownership.captured).toBe('pending')
@@ -64,10 +62,9 @@ describe('Ownership', () => {
       expect(_value).toBe(undefined)
     })
     {
-      const ownership = new Ownership().capture(123)
+      const ownership = new Ownership({ throwOnWrongState: false }).capture(123)
       let _morphedValue: any
-      // TODO: enable when `Released` is removed
-      test.skip('@description', () => {
+      test('@description', () => {
         _morphedValue = ownership.take()
         expect(_morphedValue).toBe(123)
 

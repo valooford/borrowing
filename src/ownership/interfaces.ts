@@ -29,10 +29,9 @@ import { BaseOwnership } from './ownership'
 export class Ownership<
   General,
   Captured = unknown,
-  Released = unknown,
   State extends OwnershipTypes.TypeState = Branded<'settled', 'released'>,
   ReleasePayload = unknown,
-> extends BaseOwnership<General, Captured, Released, State, ReleasePayload> {
+> extends BaseOwnership<General, Captured, State, ReleasePayload> {
   /**
    * @summary
    *
@@ -198,7 +197,7 @@ export namespace Ownership {
    * The target type of an assertion function that results in `Ownership`
    * with a potentially morphed type of the captured value.
    */
-  export type MorphAssertion<T extends GenericBounds, ReleasedT extends T['Released']> = OwnershipTypes._MorphAssertion<
+  export type MorphAssertion<T extends GenericBounds, ReleasedT extends T['Captured']> = OwnershipTypes._MorphAssertion<
     T,
     ReleasedT
   >
@@ -212,12 +211,10 @@ export namespace Ownership {
 export class InternalConsumerOwnership<
   General,
   Captured = unknown,
-  Released = unknown,
   State extends OwnershipTypes.TypeState = Branded<'settled', 'released'>,
   ReleasePayload = unknown,
-> extends BaseOwnership<General, Captured, Released, State, ReleasePayload> {
+> extends BaseOwnership<General, Captured, State, ReleasePayload> {
   declare captured: Captured
-  declare released: Released
   declare releasePayload: ReleasePayload
 
   public override get state() {
@@ -233,10 +230,9 @@ export class InternalConsumerOwnership<
 export class ProviderOwnership<
   General,
   Captured = unknown,
-  Released = unknown,
   State extends OwnershipTypes.TypeState = Branded<'settled', 'released'>,
   ReleasePayload = unknown,
-> extends BaseOwnership<General, Captured, Released, State, ReleasePayload> {
+> extends BaseOwnership<General, Captured, State, ReleasePayload> {
   /**
    * @summary
    *
@@ -327,10 +323,9 @@ export class ProviderOwnership<
 export class ConsumerOwnership<
   General,
   Captured = unknown,
-  Released = unknown,
   State extends OwnershipTypes.TypeState = Branded<'settled', 'released'>,
   ReleasePayload = unknown,
-> extends BaseOwnership<General, Captured, Released, State, ReleasePayload> {
+> extends BaseOwnership<General, Captured, State, ReleasePayload> {
   /**
    * @summary
    *

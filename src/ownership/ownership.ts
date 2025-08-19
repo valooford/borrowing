@@ -5,14 +5,11 @@ import type { Branded } from '@shared/types'
 export class BaseOwnership<
   General,
   Captured = General,
-  Released = General,
   State extends OwnershipTypes.TypeState = Branded<'settled', 'released'>,
   ReleasePayload = unknown,
 > {
   // @ts-expect-error: undefined is acceptable before `capture` method call
   protected captured: Captured
-  // @ts-expect-error: undefined is acceptable before `capture` method call
-  protected released: Released
   // @ts-expect-error: undefined is acceptable before `release` assertion call
   protected releasePayload: ReleasePayload
   private _state: OwnershipTypes.State = 'settled'
@@ -32,35 +29,24 @@ export class BaseOwnership<
     }
   }
   protected capture<Captured>(value: Captured) {
-    const self = this as unknown as InternalConsumerOwnership<General, undefined, Captured, State, ReleasePayload>
-    self.captured = undefined
-    self.released = value
-    return self as unknown as Ownership<General, Captured, undefined, State, ReleasePayload>
+    const self = this as unknown as InternalConsumerOwnership<General, Captured, State, ReleasePayload>
+    self.captured = value
+    return self as unknown as Ownership<General, Captured, State, ReleasePayload>
   }
   protected expectPayload<ReleasePayload>() {
-    return this as unknown as Ownership<General, Captured, Released, State, ReleasePayload>
+    return this as unknown as Ownership<General, Captured, State, ReleasePayload>
   }
   protected give() {
-    // `| undefined` is crucial here - it allows to narrow from `Captured & Released` to `Released` only (after `release` assertion call)
-    const self = this as unknown as InternalConsumerOwnership<
-      General,
-      General | undefined,
-      General | undefined,
-      'unknown',
-      ReleasePayload
-    >
+    // `| undefined` is crucial here - it allows to narrow down `Captured` nicely (after `release` assertion call)
+    const self = this as unknown as InternalConsumerOwnership<General, General | undefined, 'unknown', ReleasePayload>
     if (this.state === 'settled') {
-      self.captured = this.released as any
-      self.released = undefined
       self.state = 'given'
     }
-    return self as unknown as
-      | ProviderOwnership<General, General | undefined, General | undefined, 'unknown', ReleasePayload>
-      | undefined
+    return self as unknown as ProviderOwnership<General, General | undefined, 'unknown', ReleasePayload> | undefined
   }
   protected take() {
-    const value = this.released
-    this.released = undefined as any
+    const value = this.captured
+    this.captured = undefined as any
     return value
   }
 }

@@ -24,15 +24,13 @@ describe('take', () => {
     take(ownership, dst, 'current')
   })
   {
-    const ownership = new Ownership<number, 123, number>().capture(123 as const)
+    const ownership = new Ownership<number, 123>().capture(123 as const)
     test('@description', () => {
       const _dst = ownership.take()
       ownership // type `Ownership<...>`
       {
         /* test */
-        expectTypeOf(ownership).toEqualTypeOf<
-          Ownership<number, 123, undefined, Branded<'settled', 'released'>, unknown>
-        >()
+        expectTypeOf(ownership).toEqualTypeOf<Ownership<number, 123, Branded<'settled', 'released'>, unknown>>()
       }
       // safe
       const dst: { current?: number } = {}
