@@ -16,9 +16,9 @@
 <ul align="left">
 
 - либо измененный (Morphed)  
-  `{value: 'open'}` → `{value: 'closed'}`
+  `{value: 'open'}` >>> `{value: 'closed'}`
 - либо неподконтрольный (Leaved)  
-  `{value: 'closed'}` → `undefined`
+  `{value: 'closed'}` >>> `undefined`
 
 </ul>
 

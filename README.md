@@ -14,9 +14,9 @@ in the following code:
 <ul align="left">
 
 - either Morphed one  
-  `{value: 'open'}` → `{value: 'closed'}`
+  `{value: 'open'}` >>> `{value: 'closed'}`
 - or no longer under control (Leaved)  
-  `{value: 'closed'}` → `undefined`
+  `{value: 'closed'}` >>> `undefined`
 
 </ul>
 
