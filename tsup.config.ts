@@ -12,5 +12,6 @@ export default defineConfig(() => [
     esbuildOptions(options) {
       options.assetNames = '[name]'
     },
+    onSuccess: 'pnpm vitest run',
   },
 ])

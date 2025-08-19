@@ -20,7 +20,7 @@
     "build": "tsup",
     "lint": "eslint . --cache --flag unstable_native_nodejs_ts_config",
     "format": "prettier . --write",
-    "test": "vitest",
+    "test": "vitest run",
     "prepack": "node --experimental-strip-types ./scripts/prepack.ts",
     "pack": "pnpm prepack && cd dist && pnpm pack --pack-destination ..",
     "publish:npm": "pnpm prepack && cd dist && pnpm publish --access public"
