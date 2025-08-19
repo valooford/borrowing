@@ -11,8 +11,7 @@
           margin-top: -10px;
           padding: 1em;
           color: var(--color-secondary);
-          /* Disabled: Unicode arrow problems on mobile devices */
-          /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;*/ 
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
           font-size: 24px;
           line-height: 1.5em;
           
@@ -174,9 +173,9 @@
             <span class="o1">o</span>
             <span class="r2">r</span>
             <span class="r3">r</span>
-            <div class="action capture">capture🡣</div>
-            <div class="action give">give🡢</div>
-            <div class="action give2">give🡢</div>
+            <div class="action capture">capture↓</div>
+            <div class="action give">give&gt;</div>
+            <div class="action give2">give&gt;</div>
           </span>
           <span><span class="oo"><span class="o">o</span></span></span>
           <span class="wing">
@@ -184,8 +183,8 @@
             <span class="i6">i</span>
             <span class="n7">n</span>
             <span class="g8">g</span>
-            <div class="action release">🡠release</div>
-            <div class="action drop">🡣drop</div>
+            <div class="action release">&lt;release</div>
+            <div class="action drop">↓drop</div>
           </span>
         </h1>
       </header>

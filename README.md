@@ -14,13 +14,20 @@ in the following code:
 <ul align="left">
 
 - either Morphed one  
-  `{value: 'open'}` 🡢 `{value: 'closed'}`
+  `{value: 'open'}` → `{value: 'closed'}`
 - or no longer under control (Leaved)  
-  `{value: 'closed'}` 🡢 `undefined`
+  `{value: 'closed'}` → `undefined`
 
 </ul>
 
-<hr/><br/>
+<p align="center">
+  <a href="https://github.com/valooford/borrowing/stargazers">Become a 🧙Stargazer</a>
+  |
+  <a href="https://github.com/valooford/valooford#support">Support the author</a>
+</p>
+
+---
+
 </div>
 
 English | [Русский](./README.ru-RU.md)

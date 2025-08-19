@@ -16,13 +16,20 @@
 <ul align="left">
 
 - либо измененный (Morphed)  
-  `{value: 'open'}` 🡢 `{value: 'closed'}`
+  `{value: 'open'}` → `{value: 'closed'}`
 - либо неподконтрольный (Leaved)  
-  `{value: 'closed'}` 🡢 `undefined`
+  `{value: 'closed'}` → `undefined`
 
 </ul>
 
-<hr/><br/>
+<p align="center">
+  <a href="https://github.com/valooford/borrowing/stargazers">Поставить ⭐GitHub</a>
+  |
+  <a href="https://github.com/valooford/valooford#support">Поддержать автора</a>
+</p>
+
+---
+
 </div>
 
 [English](./README.md) | Русский
