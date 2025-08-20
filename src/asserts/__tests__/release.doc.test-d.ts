@@ -28,7 +28,7 @@ describe('release', () => {
       ownership: Ownership.ParamsBounds<T> | undefined,
     ): asserts ownership is Ownership.MorphAssertion<T, any> {
       borrow(ownership)
-      release(ownership, (prev) => prev)
+      release(ownership)
       ownership // type `never`
       {
         /* test */

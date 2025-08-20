@@ -16,7 +16,7 @@ describe('take', () => {
   test('@example', () => {
     const ownership = new Ownership<number>().capture(123 as const)
     let _dst: number
-    take(ownership, (value) => (_dst = value))
+    take(ownership, (value, _payload: unknown) => (_dst = value))
   })
   {
     const ownership = new Ownership<number, 123>().capture(123 as const)

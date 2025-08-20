@@ -160,6 +160,8 @@ function _assert<T extends Ownership.GenericBounds<Status>>(
 }
 ```
 
+[Scroll Up ↩](#table-of-contents)
+
 #### `Ownership#capture()`
 
 **@summary**
@@ -181,22 +183,30 @@ const ownership = new Ownership<Status>().capture('pending' as const) // type `O
 Specifies for an `Ownership` instance the type of value
 that can be passed from the assertion function during its execution.
 
+The payload is set in the body of the assertion function
+when calling `release` (3rd argument) or `drop` (2nd argument). \
+The passed value is retrieved in external code
+via the `take` (2nd callback parameter) or `drop` (1st callback parameter) functions.
+
 **@example**
 
 ```ts
 const acceptExitCode = ownership.expectPayload<0 | 1>().give()
 _assert(acceptExitCode)
-take(acceptExitCode, (_, payload) => {
+drop(acceptExitCode, (payload) => {
   payload // 0
 })
+// same as `take(acceptExitCode, (_, payload) => { ... })`
 
 function _assert<T extends Ownership.GenericBounds<number, 0 | 1>>(
   ownership: Ownership.ParamsBounds<T> | undefined,
 ): asserts ownership is Ownership.LeaveAssertion<T> {
   borrow(ownership)
-  drop(ownership, 0)
+  drop(ownership, 0) // same as `release(ownership, undefined, 0)`
 }
 ```
+
+[Scroll Up ↩](#table-of-contents)
 
 #### `Ownership#give()`
 
@@ -350,7 +360,7 @@ function _assert<T extends Ownership.GenericBounds<number>>(
 
 ### `release`
 
-> [**release**](https://github.com/valooford/borrowing/blob/main/src/asserts/release.ts)(`Ownership`, _value_ | _setValue_, _payload_): asserts ownership is `never`
+> [**release**](https://github.com/valooford/borrowing/blob/main/src/asserts/release.ts)(`Ownership`, _value_, _payload_): asserts ownership is `never`
 
 **@summary**
 
@@ -382,7 +392,7 @@ function _assert<T extends Ownership.GenericBounds>(
   ownership: Ownership.ParamsBounds<T> | undefined,
 ): asserts ownership is Ownership.MorphAssertion<T, any> {
   borrow(ownership)
-  release(ownership, (prev) => prev)
+  release(ownership)
   ownership // type `never`
 }
 ```
@@ -409,12 +419,12 @@ function _assert<T extends Ownership.GenericBounds>(
 
 ### `drop`
 
-> [**drop**](https://github.com/valooford/borrowing/blob/main/src/asserts/drop.ts)(`Ownership`, _payload_): asserts ownership is `never`
+> [**drop**](https://github.com/valooford/borrowing/blob/main/src/asserts/drop.ts)(`Ownership`, _payload_ | _receiver_): asserts ownership is `never`
 
 **@summary**
 
 Garbages a captured value. \
-Allows the assertion function to return a payload.
+Allows the assertion function to return a payload, and external code to retrieve it.
 
 **@example**
 
@@ -429,19 +439,32 @@ function _assert<T extends Ownership.GenericBounds<any, Result>>(
   borrow(ownership)
   drop(ownership, Result.Ok)
 }
+
+const ownership = new Ownership().expectPayload<Result>().give()
+_assert(ownership)
+drop(ownership, (payload) => {
+  payload // Result.Ok
+})
 ```
 
 **@description**
 
-Is a shorthand form of the `release` function, which sets the captured value to `undefined`.
+Can be used both in the body of an assertion function (`LeaveAssertion`)
+instead of `release`, and in external code instead of `take`. \
+The selected behavior is determined by the type of the 2nd parameter -
+extracting the value if it is a callback, and writing the payload for other types.
 
 ```ts
 release(ownership, undefined, Result.Ok)
 // same as
-drop(ownership, Result.Ok)
+drop(_ownership, Result.Ok)
+
+take(_ownership_, (_, _payload) => {})
+// same as
+drop(__ownership, (_payload) => {})
 ```
 
-The `drop` function narrows the passed `Ownership` to `never` in the body of the assertion function itself. \
+The `drop` function narrows the passed `Ownership` to `never`. \
 Can be used inside an assertion function that
 invalidates the `Ownership` parameter by narrowing it to `undefined`.
 
@@ -450,14 +473,14 @@ function _assert<T extends Ownership.GenericBounds<number>>(
   ownership: Ownership.ParamsBounds<T> | undefined,
 ): asserts ownership is undefined {
   borrow(ownership)
-  _assert(ownership)
+  drop(ownership)
   ownership // type `never`
 }
 ```
 
 **@throws**
 
-When `throwOnWrongState` setting is enabled (`true` by default), throws an 'Unable to drop ...' error \
+When `throwOnWrongState` setting is enabled (`true` by default), throws an 'Unable to release ...' error \
 if the `give` and `borrow` functions were not called in sequence beforehand.
 
 This is due to internal tracking of the ownership/borrowing status.
@@ -470,7 +493,7 @@ function _assert<T extends Ownership.GenericBounds>(
   ownership: Ownership.ParamsBounds<T> | undefined,
 ): asserts ownership is Ownership.LeaveAssertion<T> {
   // (...)
-  drop(ownership) // Error: Unable to drop (not borrowed), call `borrow` first
+  drop(ownership) // Error: Unable to release (not borrowed), call `borrow` first
 }
 ```
 
@@ -478,19 +501,22 @@ function _assert<T extends Ownership.GenericBounds>(
 
 ### `take`
 
-> [**take**](https://github.com/valooford/borrowing/blob/main/src/asserts/take.ts)(`Ownership`, receiver, receiverKey?): asserts ownership is `never`
+> [**take**](https://github.com/valooford/borrowing/blob/main/src/asserts/take.ts)(`Ownership`, _receiver_): asserts ownership is `never`
 
 **@summary**
 
 Retrieves the captured value from the passed `Ownership`. \
 After retrieval, the `Ownership` instance no longer contains a value and is of type `never`.
 
+It also allows to extract the payload of the assertion function
+by passing it to the callback as the second parameter.
+
 **@example**
 
 ```ts
 const ownership = new Ownership<number>().capture(123 as const)
 let _dst: number
-take(ownership, (value) => (_dst = value))
+take(ownership, (value, _payload: unknown) => (_dst = value))
 ```
 
 **@description**

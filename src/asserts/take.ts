@@ -8,12 +8,15 @@ import { isOwnership } from '@ownership/utils/isOwnership'
  * Retrieves the captured value from the passed `Ownership`. \
  * After retrieval, the `Ownership` instance no longer contains a value and is of type `never`.
  *
+ * It also allows to extract the payload of the assertion function
+ * by passing it to the callback as the second parameter.
+ *
  * @example
  *
  * ```ts
  * const ownership = new Ownership<number>().capture(123 as const)
  * let _dst: number
- * take(ownership, (value) => (_dst = value))
+ * take(ownership, (value, _payload: unknown) => (_dst = value))
  * ```
  *
  * @description

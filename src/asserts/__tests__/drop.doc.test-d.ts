@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
-import { borrow, drop, Ownership, release } from 'borrowing'
+import { borrow, drop, Ownership, release, take } from 'borrowing'
 
 // https://vitest.dev/guide/testing-types.html
 
@@ -21,10 +22,27 @@ describe('drop', () => {
       borrow(ownership)
       drop(ownership, Result.Ok)
     }
+
+    const ownership = new Ownership().expectPayload<Result>().give()
+    _assert(ownership)
+    drop(ownership, (payload) => {
+      payload // Result.Ok
+      {
+        /* test */
+        expectTypeOf(payload).toEqualTypeOf<Result>()
+      }
+    })
+    {
+      /* test */
+      expectTypeOf(ownership).toBeNever()
+    }
   })
   describe('@description', () => {
     {
       const ownership = new Ownership<number>()
+      const _ownership = new Ownership<number>()
+      const _ownership_ = new Ownership<number>().expectPayload<'ok'>()
+      const __ownership = new Ownership<number>().expectPayload<'ok'>()
       enum Result {
         Ok,
         Err,
@@ -32,7 +50,11 @@ describe('drop', () => {
       test('1st', () => {
         release(ownership, undefined, Result.Ok)
         // same as
-        drop(ownership, Result.Ok)
+        drop(_ownership, Result.Ok)
+
+        take(_ownership_, (_, _payload) => {})
+        // same as
+        drop(__ownership, (_payload) => {})
       })
     }
     test('2nd', () => {
@@ -40,7 +62,7 @@ describe('drop', () => {
         ownership: Ownership.ParamsBounds<T> | undefined,
       ): asserts ownership is undefined {
         borrow(ownership)
-        _assert(ownership)
+        drop(ownership)
         ownership // type `never`
         {
           /* test */
@@ -57,7 +79,7 @@ describe('drop', () => {
       ownership: Ownership.ParamsBounds<T> | undefined,
     ): asserts ownership is Ownership.LeaveAssertion<T> {
       // (...)
-      drop(ownership) // Error: Unable to drop (not borrowed), call `borrow` first
+      drop(ownership) // Error: Unable to release (not borrowed), call `borrow` first
     }
   })
 })

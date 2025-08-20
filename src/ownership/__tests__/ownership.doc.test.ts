@@ -40,7 +40,7 @@ describe('Ownership', () => {
       test('@example', () => {
         const acceptExitCode = ownership.expectPayload<0 | 1>().give()
         _assert(acceptExitCode)
-        take(acceptExitCode, (_, payload) => {
+        drop(acceptExitCode, (payload) => {
           expect(payload).toBe(0)
         })
 

@@ -93,20 +93,26 @@ export class Ownership<
    * Specifies for an `Ownership` instance the type of value
    * that can be passed from the assertion function during its execution.
    *
+   * The payload is set in the body of the assertion function
+   * when calling `release` (3rd argument) or `drop` (2nd argument). \
+   * The passed value is retrieved in external code
+   * via the `take` (2nd callback parameter) or `drop` (1st callback parameter) functions.
+   *
    * @example
    *
    * ```ts
    * const acceptExitCode = ownership.expectPayload<0 | 1>().give()
    * _assert(acceptExitCode)
-   * take(acceptExitCode, (_, payload) => {
+   * drop(acceptExitCode, (payload) => {
    *   payload // 0
    * })
+   * // same as `take(acceptExitCode, (_, payload) => { ... })`
    *
    * function _assert<T extends Ownership.GenericBounds<number, 0 | 1>>(
    *   ownership: Ownership.ParamsBounds<T> | undefined,
    * ): asserts ownership is Ownership.LeaveAssertion<T> {
    *   borrow(ownership)
-   *   drop(ownership, 0)
+   *   drop(ownership, 0) // same as `release(ownership, undefined, 0)`
    * }
    * ```
    *

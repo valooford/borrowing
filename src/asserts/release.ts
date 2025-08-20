@@ -1,7 +1,6 @@
 import type * as OwnershipTypes from '@ownership/types'
 
 import { isOwnership } from '@ownership/utils/isOwnership'
-import { isFunction } from '@shared/utils'
 
 /**
  * @summary
@@ -31,7 +30,7 @@ import { isFunction } from '@shared/utils'
  *   ownership: Ownership.ParamsBounds<T> | undefined,
  * ): asserts ownership is Ownership.MorphAssertion<T, any> {
  *   borrow(ownership)
- *   release(ownership, (prev) => prev)
+ *   release(ownership)
  *   ownership // type `never`
  * }
  * ```
@@ -56,12 +55,12 @@ import { isFunction } from '@shared/utils'
  *
  * @see https://github.com/valooford/borrowing#release
  */
-export function release<T extends OwnershipTypes._GenericBounds>(
-  ownership: OwnershipTypes.ParamsBounds<T>,
-  setValue: T['General'] | ((prev: T['General']) => T['General']),
-  payload?: T['ReleasePayload'],
+export function release<T extends OwnershipTypes.AnyOwnership, TMap extends OwnershipTypes._inferTypes<T>>(
+  ownership: T | undefined,
+  value?: TMap['General'],
+  payload?: TMap['ReleasePayload'],
 ): asserts ownership is undefined {
-  isOwnership<T>(ownership)
+  isOwnership<TMap>(ownership)
   if (ownership.state !== 'borrowed' && ownership.options.throwOnWrongState) {
     switch (ownership.state) {
       case 'given':
@@ -70,7 +69,7 @@ export function release<T extends OwnershipTypes._GenericBounds>(
         throw Error('Unable to release (already settled), call `give` first')
     }
   }
-  ownership.captured = isFunction(setValue) ? setValue(ownership.captured) : setValue
+  if (arguments.length >= 2) ownership.captured = value
   if (arguments.length == 3) ownership.releasePayload = payload
   ownership.state = 'settled'
 }

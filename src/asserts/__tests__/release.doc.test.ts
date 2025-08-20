@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 
 import { borrow, Ownership, release, take } from 'borrowing'
 
@@ -31,8 +30,8 @@ describe('release', () => {
       ownership: Ownership.ParamsBounds<T> | undefined,
     ): asserts ownership is Ownership.MorphAssertion<T, any> {
       borrow(ownership)
-      release(ownership, (prev) => prev)
-      release(ownership, (prev) => prev)
+      release(ownership)
+      release(ownership)
     }
     const ownership = new Ownership().give()
     expect(() => _assert(ownership)).toThrow('Unable to release (already settled), call `give` first')

@@ -5,7 +5,6 @@ export default defineConfig({
     globals: true,
     typecheck: {
       enabled: true,
-      ignoreSourceErrors: true,
     },
   },
 })

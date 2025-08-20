@@ -66,7 +66,7 @@ describe('Usage (provide)', () => {
     value: V,
   ): asserts ownership is Ownership.MorphAssertion<T, T['General'] & { value: V }> {
     borrow(ownership)
-    release(ownership, (prev) => ({ value: prev.value.length < 0 ? value : value }))
+    release(ownership, { value: ownership.captured.length < 0 ? value : value })
   }
 
   it('should assert types in place for partials', () => {

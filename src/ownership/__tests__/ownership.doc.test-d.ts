@@ -105,20 +105,25 @@ describe('Ownership', () => {
       test('@example', () => {
         const acceptExitCode = ownership.expectPayload<0 | 1>().give()
         _assert(acceptExitCode)
-        take(acceptExitCode, (_, payload) => {
+        drop(acceptExitCode, (payload) => {
           payload // 0
+          {
+            /* test */
+            expectTypeOf(payload).toEqualTypeOf<0 | 1>()
+          }
         })
+        // same as `take(acceptExitCode, (_, payload) => { ... })`
 
         function _assert<T extends Ownership.GenericBounds<number, 0 | 1>>(
           ownership: Ownership.ParamsBounds<T> | undefined,
         ): asserts ownership is Ownership.LeaveAssertion<T> {
           borrow(ownership)
+          drop(ownership, 0) // same as `release(ownership, undefined, 0)`
           {
             /* test */
             // @ts-expect-error: error code should be `0 | 1`
             drop(ownership, 2)
           }
-          drop(ownership, 0)
         }
       })
     }

@@ -1,12 +1,16 @@
 import type * as OwnershipTypes from '@ownership/types'
 
 import { isOwnership } from '@ownership/utils/isOwnership'
+import { isFunction } from '@shared/utils'
+
+import { release } from './release'
+import { take } from './take'
 
 /**
  * @summary
  *
  * Garbages a captured value. \
- * Allows the assertion function to return a payload.
+ * Allows the assertion function to return a payload, and external code to retrieve it.
  *
  * @example
  *
@@ -18,19 +22,32 @@ import { isOwnership } from '@ownership/utils/isOwnership'
  *   borrow(ownership)
  *   drop(ownership, Result.Ok)
  * }
+ *
+ * const ownership = new Ownership().expectPayload<Result>().give()
+ * _assert(ownership)
+ * drop(ownership, (payload) => {
+ *   payload // Result.Ok
+ * })
  * ```
  *
  * @description
  *
- * Is a shorthand form of the `release` function, which sets the captured value to `undefined`.
+ * Can be used both in the body of an assertion function (`LeaveAssertion`)
+ * instead of `release`, and in external code instead of `take`. \
+ * The selected behavior is determined by the type of the 2nd parameter -
+ * extracting the value if it is a callback, and writing the payload for other types.
  *
  * ```ts
  * release(ownership, undefined, Result.Ok)
  * // same as
- * drop(ownership, Result.Ok)
+ * drop(_ownership, Result.Ok)
+ *
+ * take(_ownership_, (_, _payload) => {})
+ * // same as
+ * drop(__ownership, (_payload) => {})
  * ```
  *
- * The `drop` function narrows the passed `Ownership` to `never` in the body of the assertion function itself. \
+ * The `drop` function narrows the passed `Ownership` to `never`. \
  * Can be used inside an assertion function that
  * invalidates the `Ownership` parameter by narrowing it to `undefined`.
  *
@@ -39,14 +56,14 @@ import { isOwnership } from '@ownership/utils/isOwnership'
  *   ownership: Ownership.ParamsBounds<T> | undefined,
  * ): asserts ownership is undefined {
  *   borrow(ownership)
- *   _assert(ownership)
+ *   drop(ownership)
  *   ownership // type `never`
  * }
  * ```
  *
  * @throws
  *
- * When `throwOnWrongState` setting is enabled (`true` by default), throws an 'Unable to drop ...' error \
+ * When `throwOnWrongState` setting is enabled (`true` by default), throws an 'Unable to release ...' error \
  * if the `give` and `borrow` functions were not called in sequence beforehand.
  *
  * This is due to internal tracking of the ownership/borrowing status.
@@ -59,26 +76,28 @@ import { isOwnership } from '@ownership/utils/isOwnership'
  *   ownership: Ownership.ParamsBounds<T> | undefined,
  * ): asserts ownership is Ownership.LeaveAssertion<T> {
  *   // (...)
- *   drop(ownership) // Error: Unable to drop (not borrowed), call `borrow` first
+ *   drop(ownership) // Error: Unable to release (not borrowed), call `borrow` first
  * }
  * ```
  *
  * @see https://github.com/valooford/borrowing#drop
  */
-export function drop<T extends OwnershipTypes._GenericBounds>(
-  ownership: OwnershipTypes.ParamsBounds<T>,
-  payload?: T['ReleasePayload'],
+export function drop<T extends OwnershipTypes.AnyOwnership, TMap extends OwnershipTypes._inferTypes<T>>(
+  ownership: T | undefined,
+  payloadOrReceiver?: TMap['ReleasePayload'] | ((payload: TMap['ReleasePayload']) => void),
 ): asserts ownership is undefined {
-  isOwnership<T>(ownership)
-  if (ownership.state !== 'borrowed' && ownership.options.throwOnWrongState) {
-    switch (ownership.state) {
-      case 'given':
-        throw Error('Unable to drop (not borrowed), call `borrow` first')
-      case 'settled':
-        throw Error('Unable to drop (already settled), call `give` first')
-    }
+  isOwnership<TMap>(ownership)
+  if (isFunction(payloadOrReceiver)) {
+    const receiver = payloadOrReceiver
+    take(ownership, (_, payload) => {
+      receiver(payload)
+    })
+    return
   }
-  ownership.captured = undefined
-  if (arguments.length == 2) ownership.releasePayload = payload
-  ownership.state = 'settled'
+
+  if (arguments.length == 2) {
+    release(ownership, undefined, payloadOrReceiver)
+  } else {
+    release(ownership)
+  }
 }
