@@ -73,6 +73,8 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 }
 ```
 
+▶ [See it in action](https://www.typescriptlang.org/play/?#code/JYWwDg9gTgLgBAbzgI2lCB3ANHAJusHAeQwDsBTKAZwAthC4pyAbcgQyvJxjYGty4AXzgAzdCDgByVFHQZgpAOaSAUCoQq4WuAHodcAMZswMAK5M4MGgIBubZqfKbtBiKSrww5UgeDM4ALxwFBhwJBTUdGAAPB5QCooAfAAUAJQAdEYm5uTJkoDw5JJwHIZuHqlq2rr6BkxsMAJspMVUnLDAbqKmPjAdzVb1KGiYVMWkuKXupiDko1a29o7OWiLdBr2dVnIAghhsAJ7RACpw5AAeDeOj4ZS09OkA4t6UwAYAQhDduFSxMPFKiRSyyqcEwETuYAAXGEyLcoukAApsKBsEBUD5fH5HRJwAA+cC+5BECnIuCwwNS0I4bRgozBcPocGA11hkXuABl2DZyNtWpQNqRjjiNCDtDI5Ml6WywBVRVp8BAwJLWRDZdpBJVtHo4GAmGBkQIpRDRNA4CAIDYEnBkopyPA2JYUe4RJQ2MhWIwiZRvAZyGqtKxPD6-AAlImBHXB5jpRTAblpTVabXm7mWayGYxmJgTOwOAQKGAQNMCVY9PrAraYXYHZJeHyhokVYHagzWAy8JkiYtwXOOJmjRRuJxVGD7LxwACSVAAouBRxGbtL0goXVAjmPZtFR14IF2675mGGRIkANqSADCmZyuEkAF1ThdvN8CeMiSSJgB+R196Eieycao4AAAz+RwgMTQC9XYGBoSyLMBHmHtFkacYM2YfwgNjeNUiA4pFDYBRgX3BsuyCYjozgnI8kKFpJnKGM41yf00x2PZ9lrKMj2Y7cBCnWcTH2bZ8IUBcVXhFdKHXLwfh43dI3rQ8iVPC8r2zO8H0uZ9CWJChP2-ARf3-ARtRAqAwJUDV1GbGpVJQiB5igJC8zGCYsPzeB4kUGh7TY4FXHceBUAgDsghCGFwSiaJJEAXg3AFWdyQUgySimDyOLJAyNyE2sww6gaMYWhpPoujLTYaEGJhWA4WZQTE+hgVLdYirqXBjg0p8WQi+4ngiV4MSuX5-iSIE5RqzqoXChkwERZFUXRT5+uxPEX1wN9dPJKpKQK-k6VqsB+wmpcAFloDAGheUKtxjhwI4z0vbI1NvYVgSqcVMGVMbmKqCr2E4d7JuYyyvvYXBkiC3gmyqbUeH4bte0NUx4DkxCgMXCFcIUDwml9Cs+FyMGcGSOHUkCJ6Rp4ycqDDSrOAmIJZK7OG2quKQ0rgL9QIM0QjMA0zzKqQQKkskUtX0NgDF9Exih1A5mAgNgJjkh0qC8XxiQMSwN2BQMhmCiMwtRyKYvipaYsANZ2ErSTJbNS+KMnOFWYCRfZZflqLFW8Ip8UkAxZZpi2MsYrLIZqXKUK29pOgagU00GXULWAFbRgdfVnbl3B6rWaPbRgABlHgGla85NI6ybHmeeJ3nm74BoSHBJHd0hPakH2ID9wFkme7QjSiaEDfuJEUTRPrq8W-FtPfdbtE26lttGyb9r7qbOTYblzv5PohUQTutFejA-ulT7tAVJVu-oHBT6m5LSUCAIgjNoov3rusimhb3fdJdLgUB7Rs7z+o8YgMFCGItPR-GAOQVMiEU4u3TlUY+oNAG8AJpjBoxMAikzlP5KgEBWDpFlooZIKC-SAV1AWUYb9W4fy-sArQ5NmQABECBeFphrHcXYwZM2fJIJo+wrAJAfvpOAhlmAARMhzcCwc4AADkiBHGnNCICFBuRQHRknVowBFCkDdB6QsYx9isK4HAbBBIAKIWYMAZAKIoD6JEq4EAyAFD1CKvIKw2UABEpAIAAFpuhUDYC6LxAAqNxXizKsFGGICAEgTw8SoLUegMAvGzHMaQGAt5kjeRgGAKgkI9CxPiSYJJVAUkwGXBAHQgsVBAA)
+
 ---
 
 # Table of Contents
@@ -107,20 +109,20 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 Put this in your [Global Snippets file](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_create-your-own-snippets) (`Ctrl+Shift+P > Snippets: Configure Snippets`). \
 You can remove the `scope` property in single-language snippet files.
 
-```json
+```jsonc
 {
   "Create borrowing-ready `Ownership` instance": {
     "scope": "typescript,typescriptreact",
     "prefix": "ownership",
-    "body": ["new Ownership<${1:string}>().capture(${2:'hello'} as const).give();"]
+    "body": ["new Ownership<${1:string}>().capture(${2:'hello'} as const).give();"],
   },
   "Give settled `Ownership` again": {
     "scope": "typescript,typescriptreact",
     "prefix": "give",
     "body": [
-      "${0:ownership} = ${0:ownership}.give();"
+      "${0:ownership} = ${0:ownership}.give();",
       // "$CLIPBOARD = $CLIPBOARD.give();"
-    ]
+    ],
   },
   "Create `MorphAssertion` function": {
     "scope": "typescript,typescriptreact",
@@ -132,8 +134,8 @@ You can remove the `scope` property in single-language snippet files.
       "  borrow(ownership);",
       "  $0",
       "  release(ownership, ${4:ownership.captured});",
-      "}"
-    ]
+      "}",
+    ],
   },
   "Create `LeaveAssertion` function": {
     "scope": "typescript,typescriptreact",
@@ -145,9 +147,9 @@ You can remove the `scope` property in single-language snippet files.
       "  borrow(ownership);",
       "  $0",
       "  drop(ownership$3);",
-      "}"
-    ]
-  }
+      "}",
+    ],
+  },
 }
 ```
 
