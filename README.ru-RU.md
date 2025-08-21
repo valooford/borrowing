@@ -80,6 +80,7 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 # Содержимое
 
 - [Полезные ссылки](#полезные-ссылки)
+- [Сниппеты для VS Code](#сниппеты-для-vs-code)
 - [Справочник API](#справочник-api)
   - [`Ownership`](#ownership)
     - [`Ownership#options`](#ownershipoptions)
@@ -103,6 +104,55 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 >
 > Используйте библиотеку в паре с правилами `no-unsafe-*` из [`typescript-eslint`](https://typescript-eslint.io/), такими как [`no-unsafe-call`](https://typescript-eslint.io/rules/no-unsafe-call/).  
 > Это позволяет предотвратить дальнейшее использование экземпляра Ownership, как после вызова `take()`, так и после любого другого действия, приводящего к `never`.
+
+## Сниппеты для VS Code
+
+Добавьте приведенные сниппеты в [Global Snippets file](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_create-your-own-snippets) (`Ctrl+Shift+P > Snippets: Configure Snippets`). \
+В файлах со сниппетами для одного языка свойство `scope` можно убрать.
+
+```json
+{
+  "Создать экземпляр `Ownership`": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "ownership",
+    "body": ["new Ownership<${1:string}>().capture(${2:'hello'} as const).give();"]
+  },
+  "Повторно передать владение над `Ownership`": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "give",
+    "body": [
+      "${0:ownership} = ${0:ownership}.give();"
+      // "$CLIPBOARD = $CLIPBOARD.give();"
+    ]
+  },
+  "Создать `MorphAssertion` функцию": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "morph",
+    "body": [
+      "function ${1:assert}<T extends Ownership.GenericBounds<${2:string}>>(",
+      "  ownership: Ownership.ParamsBounds<T> | undefined,",
+      "): asserts ownership is Ownership.MorphAssertion<T, ${3:T['Captured']}> {",
+      "  borrow(ownership);",
+      "  $0",
+      "  release(ownership, ${4:ownership.captured});",
+      "}"
+    ]
+  },
+  "Создать `LeaveAssertion` функцию": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "leave",
+    "body": [
+      "function ${1:assert}<T extends Ownership.GenericBounds<${2:string}>>(",
+      "  ownership: Ownership.ParamsBounds<T> | undefined,",
+      "): asserts ownership is Ownership.LeaveAssertion<T> {",
+      "  borrow(ownership);",
+      "  $0",
+      "  drop(ownership$3);",
+      "}"
+    ]
+  }
+}
+```
 
 ## Справочник API
 
