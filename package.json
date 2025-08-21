@@ -1,6 +1,6 @@
 {
   "name": "borrowing",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A utility library that provides borrowing mechanisms via assertion functions",
   "type": "module",
   "main": "./dist/index.js",
