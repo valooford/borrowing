@@ -98,6 +98,11 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 ## Resources
 
 - [Assertion functions in TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions)
+- [Can assertion functions provide a better experience for library users?](https://www.reddit.com/r/typescript/comments/1mw4kzr/can_assertion_functions_provide_a_better/) \
+  A Reddit post demonstrating approaches to implementing borrowing mechanisms in TypeScript. \
+  (some thoughts on the development of this library)
+- [BorrowScript](https://github.com/alshdavid/BorrowScript) (spec, design phase) \
+  _"TypeScript Syntax, Rust Borrow Checker, Go Philosophies ... No Garbage Collection"_
 
 > [!tip]
 >

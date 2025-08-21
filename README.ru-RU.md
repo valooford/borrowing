@@ -100,6 +100,11 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 ## Полезные ссылки
 
 - [Про assertion функции в TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions) [ англ. ]
+- [Can assertion functions provide a better experience for library users?](https://www.reddit.com/r/typescript/comments/1mw4kzr/can_assertion_functions_provide_a_better/) [ англ. ] \
+  Пост на Reddit, демонстрирующий подходы к реализации механизмов заимствования на TypeScript. \
+  (некоторые размышления в процессе разработки данной библиотеки)
+- [BorrowScript](https://github.com/alshdavid/BorrowScript) (спецификация, на стадии проектирования) \
+  _"TypeScript Синтаксис, Анализатор Заимствований Rust (borrow checker), Философия Go ... Без Сборщика Мусора"_
 
 > [!tip]
 > **Совет**
