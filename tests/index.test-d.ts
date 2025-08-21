@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
@@ -241,6 +243,44 @@ describe('Usage (consume)', () => {
 
       drop(ownership)
       expectTypeOf(ownership).toBeNever()
+    }
+  })
+})
+
+describe('Doc-tests', () => {
+  // file://./../README.md#example
+  // file://./../README.ru-RU.md#example
+  test('example', () => {
+    const value = 'Hello, world!' // type 'Hello, world!'
+    let ownership = new Ownership<string>().capture(value).give()
+    replaceStr(ownership, 'M0RPH3D W0R1D')
+    let morphedValue = ownership.take() // new type 'M0RPH3D W0R1D' | (*)
+
+    ownership // type `Ownership<string, 'M0RPH3D W0R1D', ...>`
+    ownership = ownership.give()
+    sendMessage(ownership)
+    ownership // new type `undefined`
+
+    {
+      /* test */
+      expectTypeOf(morphedValue).toEqualTypeOf<'M0RPH3D W0R1D'>()
+      expectTypeOf(ownership).toBeUndefined()
+    }
+
+    function replaceStr<V extends string, T extends Ownership.GenericBounds<string>>(
+      ownership: Ownership.ParamsBounds<T> | undefined,
+      value: V,
+    ): asserts ownership is Ownership.MorphAssertion<T, V> {
+      release(ownership, value)
+    }
+
+    function sendMessage<T extends Ownership.GenericBounds<string>>(
+      ownership: Ownership.ParamsBounds<T> | undefined,
+    ): asserts ownership is undefined {
+      borrow(ownership)
+      const value = ownership.captured // type `string`
+      // fetch('https://web.site/api/log', { method: 'POST', body: value })
+      drop(ownership)
     }
   })
 })

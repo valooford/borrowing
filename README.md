@@ -39,7 +39,7 @@ import { Ownership } from 'borrowing'
 
 import { replaceStr, sendMessage } from './lib'
 
-const value = 'Hello, world!' as const // type 'Hello, world!'
+const value = 'Hello, world!' // type 'Hello, world!'
 let ownership = new Ownership<string>().capture(value).give()
 replaceStr(ownership, 'M0RPH3D W0R1D')
 let morphedValue = ownership.take() // new type 'M0RPH3D W0R1D' | (*)
