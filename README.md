@@ -32,6 +32,15 @@ in the following code:
 
 English | [Русский](./README.ru-RU.md)
 
+> [!IMPORTANT]
+>
+> This version of `borrowing` is under development. \
+> Documentation may not be up to date, API may (will) have breaking changes. \
+> You can try out the fresh beta version by installing it as follows: \
+> `npm install borrowing@next --save-exact`
+>
+> The documentation for the current (latest) version is located [here](https://github.com/valooford/borrowing).
+
 ## Example
 
 ```ts
@@ -95,6 +104,7 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
   - [`drop`](#drop)
   - [`take`](#take)
 - [Limitations and Recommendations](#limitations-and-recommendations)
+- [Previous versions](#previous-versions)
 
 ## Resources
 
@@ -105,7 +115,7 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 - [BorrowScript](https://github.com/alshdavid/BorrowScript) (spec, design phase) \
   _"TypeScript Syntax, Rust Borrow Checker, Go Philosophies ... No Garbage Collection"_
 
-> [!tip]
+> [!TIP]
 >
 > Use in combination with `no-unsafe-*`-rules from [`typescript-eslint`](https://typescript-eslint.io/), such as [`no-unsafe-call`](https://typescript-eslint.io/rules/no-unsafe-call/).  
 > This prevents further use of the Ownership instance, either after calling `take()` or after any other assertion that results in `never`.
@@ -693,3 +703,7 @@ fieldMutRef // type `never`
 ```
 
 [Scroll Up ↩](#table-of-contents)
+
+## Previous versions
+
+- [v0.x](https://github.com/valooford/borrowing/tree/v/0.x)

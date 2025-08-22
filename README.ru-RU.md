@@ -34,6 +34,16 @@
 
 [English](./README.md) | Русский
 
+> [!IMPORTANT]
+> **Важно**
+>
+> Эта версия `borrowing` находится в разработке. \
+> Документация может быть неактуальна, в API могут (будут) появляться критические изменения. \
+> Свежую бета-версию можно опробовать, установив ее следующим образом: \
+> `npm install borrowing@next --save-exact`
+>
+> Документация текущей (latest) версии находится [здесь](https://github.com/valooford/borrowing).
+
 ## Пример
 
 ```ts
@@ -97,6 +107,7 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
   - [`drop`](#drop)
   - [`take`](#take)
 - [Ограничения и советы](#ограничения-и-советы)
+- [Предыдущие версии](#предыдущие-версии)
 
 ## Полезные ссылки
 
@@ -107,7 +118,7 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 - [BorrowScript](https://github.com/alshdavid/BorrowScript) (спецификация, на стадии проектирования) \
   _"TypeScript Синтаксис, Анализатор Заимствований Rust (borrow checker), Философия Go ... Без Сборщика Мусора"_
 
-> [!tip]
+> [!TIP]
 > **Совет**
 >
 > Используйте библиотеку в паре с правилами `no-unsafe-*` из [`typescript-eslint`](https://typescript-eslint.io/), такими как [`no-unsafe-call`](https://typescript-eslint.io/rules/no-unsafe-call/).  
@@ -698,3 +709,7 @@ fieldMutRef // тип `never`
 ```
 
 [К содержимому ↩](#содержимое)
+
+## Предыдущие версии
+
+- [v0.x](https://github.com/valooford/borrowing/tree/v/0.x)
