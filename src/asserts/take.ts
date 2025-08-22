@@ -59,15 +59,16 @@ export function take<T extends OwnershipTypes.AnyOwnership, TMap extends Ownersh
   receiver: (value: NonNullable<TMap['Captured']>, payload: TMap['ReleasePayload']) => void,
 ): asserts ownership is undefined {
   isOwnership<TMap>(ownership)
-  if (ownership.state !== 'settled' && ownership.options.throwOnWrongState) {
+  if (ownership.state !== 'settled') {
+    if (!ownership.options.throwOnWrongState) return
     throw Error('Unable to take (not settled), call `release` or `drop` first or remove `give` call')
   }
   const { takenPlaceholder } = ownership.options
-  if (
-    ownership.captured === takenPlaceholder &&
-    ownership.releasePayload === takenPlaceholder &&
-    ownership.options.throwOnWrongState
-  ) {
+  if (ownership.captured === takenPlaceholder && ownership.releasePayload === takenPlaceholder) {
+    if (!ownership.options.throwOnWrongState) {
+      receiver(ownership.captured, ownership.releasePayload)
+      return
+    }
     throw Error('Unable to take (already taken)')
   }
   receiver(ownership.captured, ownership.releasePayload)

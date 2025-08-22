@@ -96,6 +96,7 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
   - [`release`](#release)
   - [`drop`](#drop)
   - [`take`](#take)
+- [Ограничения и советы](#ограничения-и-советы)
 
 ## Полезные ссылки
 
@@ -160,6 +161,8 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
   },
 }
 ```
+
+[К содержимому ↩](#содержимое)
 
 ## Справочник API
 
@@ -612,6 +615,86 @@ take(ownership, (value) => (_dst = value)) // Ошибка: Unable to take (not 
 const ownership = new Ownership<number>().capture(123 as const)
 take(ownership, (value) => (_dst = value))
 take(ownership, (value) => (_dst = value)) // Ошибка: Unable to take (already taken)
+```
+
+[К содержимому ↩](#содержимое)
+
+## Ограничения и советы
+
+1. Всегда вызывайте функции `borrow` и `release/drop` (в таком порядке) в теле assertion функций. \
+   `: asserts ownership is Ownership.MorphAssertion { borrow + release }` \
+   `: asserts ownership is Ownership.LeaveAssertion { borrow + ‎ drop ‎ ‎ }` \
+   В будущем наличие необходимых вызовов может проверяться линтером через плагин (запланирован).
+
+2. Не забывайте про вызов метода `give` перед передачей экземпляра `Ownership` в assertion функцию. \
+   Однако даже при невалидном вызове метод `take` позволяет получить
+   заимствованное (captured) значение с последним валидным типом.
+
+```ts
+interface State {
+  value: string
+}
+let ownership = new Ownership<State>({ throwOnWrongState: false }).capture({ value: 'open' } as const).give()
+update(ownership, 'closed')
+const v1 = ownership.take().value // тип 'closed'
+update(ownership, 'open')
+const v2 = ownership.take().value // тип 'closed' (не изменился)
+type v2 = Ownership.inferTypes<typeof ownership>['Captured']['value'] // НЕПРАВИЛЬНЫЙ ТИП 'open' (то же и с `take` функцией)
+ownership = ownership.give()
+update(ownership, 'open')
+const v3 = ownership.take().value // тип 'open'
+
+function update<T extends Ownership.GenericBounds<State>, V extends 'open' | 'closed'>(
+  ownership: Ownership.ParamsBounds<T> | undefined,
+  value: V,
+): asserts ownership is Ownership.MorphAssertion<T, { value: V }> {
+  borrow(ownership)
+  release(ownership, { value })
+}
+```
+
+2.1. К сожалению, функция `take` и вспомогательный тип `Ownership.inferTypes` все еще страдают от изменения типа. \
+Планируется снизить риск нарушения этих правил путем переработки API
+и реализации ранее упомянутого функционала для линтера.
+
+Вышеприведенные требования проверяются в рантайме при включенной настройке `throwOnWrongState` (`true` по умолчанию). \
+В этом случае их нарушение приведет к выбросу ошибки.
+
+3. Вызывайте `capture/give` тут же при создании экземпляра `Ownership` и присваивании его переменной. \
+   Это позволит не иметь других ссылок на значение, которые могут стать невалидными после вызовов assertion функций.
+
+```ts
+interface Field {
+  value: string
+}
+declare function morph(/* ... */): void ... // некоторая `MorphAssertion` функция
+
+// ❌ Неправильно
+const field = { value: 'Hello' } as const
+const fieldMutRef = new Ownership<Field>().capture(field).give()
+morph(fieldMutRef)
+drop(fieldMutRef)
+fieldMutRef // тип `never`
+field.value = 'Still accessible'
+
+// ❌ Неправильно
+const fieldRef = new Ownership<Field>().capture({ value: 'Hello' } as const)
+const fieldMutRef = fieldRef.give()
+morph(fieldRef)
+drop(fieldMutRef)
+fieldMutRef // тип `never`
+fieldRef.take().value = 'Still accessible' // Ошибка (TypeError): Cannot read properties of undefined (reading 'value')
+
+// ✅ Правильно
+let fieldMutRef = new Ownership<Field>().capture({ value: 'Hello' } as const).give()
+morph(fieldMutRef)
+fieldMutRef = fieldMutRef.give() // `let` позволяет передавать владение несколько раз, используя ссылку, хранящуюся в единственной переменной
+morph(fieldMutRef)
+take(fieldMutRef, (field) => {
+  // (...)
+})
+fieldMutRef // тип `never`
+// не остается других ссылок на значение
 ```
 
 [К содержимому ↩](#содержимое)

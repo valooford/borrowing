@@ -62,7 +62,8 @@ export function borrow<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.PubParamsBounds<T>,
 ): asserts ownership is ConsumerOwnership<T['General'], T['Captured'], any, T['ReleasePayload']> {
   isPubOwnership(ownership)
-  if (ownership.state !== 'given' && ownership.options.throwOnWrongState) {
+  if (ownership.state !== 'given') {
+    if (!ownership.options.throwOnWrongState) return
     throw Error('Unable to borrow (not given), call `give` first')
   }
   ownership.state = 'borrowed'

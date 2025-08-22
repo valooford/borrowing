@@ -250,7 +250,7 @@ describe('Usage (consume)', () => {
 describe('Doc-tests', () => {
   // file://./../README.md#example
   // file://./../README.ru-RU.md#example
-  test('example', () => {
+  test('Example', () => {
     const value = 'Hello, world!' // type 'Hello, world!'
     let ownership = new Ownership<string>().capture(value).give()
     replaceStr(ownership, 'M0RPH3D W0R1D')
@@ -282,5 +282,59 @@ describe('Doc-tests', () => {
       // fetch('https://web.site/api/log', { method: 'POST', body: value })
       drop(ownership)
     }
+  })
+
+  describe('Limitations and Recommendations', () => {
+    test('1st', () => {
+      interface State {
+        value: string
+      }
+      let ownership = new Ownership<State>({ throwOnWrongState: false }).capture({ value: 'open' } as const).give()
+      update(ownership, 'closed')
+      const v1 = ownership.take().value // type 'closed'
+      update(ownership, 'open')
+      const v2 = ownership.take().value // type 'closed'
+      type v2 = Ownership.inferTypes<typeof ownership>['Captured']['value'] // WRONG TYPE 'open'
+      ownership = ownership.give()
+      update(ownership, 'open')
+      const v3 = ownership.take().value // type 'open'
+
+      function update<T extends Ownership.GenericBounds<State>, V extends 'open' | 'closed'>(
+        ownership: Ownership.ParamsBounds<T> | undefined,
+        value: V,
+      ): asserts ownership is Ownership.MorphAssertion<T, { value: V }> {
+        borrow(ownership)
+        release(ownership, { value })
+      }
+
+      {
+        /* test */
+        expectTypeOf(v1).toEqualTypeOf<'closed'>()
+        expectTypeOf(v2).toEqualTypeOf<'closed'>()
+        expectTypeOf(v3).toEqualTypeOf<'open'>()
+      }
+    })
+    test.skip('1st (extended)', () => {
+      interface State {
+        value: string
+      }
+      let ownership = new Ownership<State>().capture({ value: 'open' } as const).give()
+      update(ownership, 'closed')
+      update(ownership, 'open')
+      take(ownership, ({ value }) => {
+        expectTypeOf(ownership.take().value).toEqualTypeOf<'closed'>()
+        // TODO: fix types after invalid operations
+        // expectTypeOf<Ownership.inferTypes<typeof ownership>['Captured']['value']>().toEqualTypeOf<'closed'>()
+        // expectTypeOf(value).toEqualTypeOf<'closed'>()
+      })
+
+      function update<T extends Ownership.GenericBounds<State>, V extends 'open' | 'closed'>(
+        ownership: Ownership.ParamsBounds<T> | undefined,
+        value: V,
+      ): asserts ownership is Ownership.MorphAssertion<T, { value: V }> {
+        borrow(ownership)
+        release(ownership, { value })
+      }
+    })
   })
 })

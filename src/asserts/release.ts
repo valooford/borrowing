@@ -61,7 +61,8 @@ export function release<T extends OwnershipTypes.AnyOwnership, TMap extends Owne
   payload?: TMap['ReleasePayload'],
 ): asserts ownership is undefined {
   isOwnership<TMap>(ownership)
-  if (ownership.state !== 'borrowed' && ownership.options.throwOnWrongState) {
+  if (ownership.state !== 'borrowed') {
+    if (!ownership.options.throwOnWrongState) return
     switch (ownership.state) {
       case 'given':
         throw Error('Unable to release (not borrowed), call `borrow` first')
