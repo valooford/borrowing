@@ -49,7 +49,7 @@ export class BaseOwnership<
     }
     return self as unknown as ProviderOwnership<General, General | undefined, 'unknown', ReleasePayload> | undefined
   }
-  protected take() {
+  protected take(): Captured {
     const value = this.captured
     this.captured = undefined as any
     return value

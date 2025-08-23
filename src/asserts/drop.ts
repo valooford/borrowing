@@ -96,7 +96,8 @@ export function drop<T extends OwnershipTypes.AnyOwnership, TMap extends Ownersh
   }
 
   if (arguments.length == 2) {
-    release(ownership, undefined, payloadOrReceiver)
+    const payload = payloadOrReceiver
+    release(ownership, undefined, payload)
   } else {
     release(ownership)
   }

@@ -1,5 +1,5 @@
 {
-  "include": ["global.d.ts", "**/*"],
+  "include": ["global.d.ts", "src/**/*"],
   "exclude": ["dist"],
 
   // Based on https://bun.sh/docs/typescript
@@ -30,6 +30,8 @@
 
     /* ++++++++ */
 
+    "declaration": true,
+    "isolatedDeclarations": true,
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {

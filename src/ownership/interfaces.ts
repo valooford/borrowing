@@ -84,7 +84,9 @@ export class Ownership<
    *
    * @see https://github.com/valooford/borrowing#ownershipcapture
    */
-  public override capture<Captured extends General>(value: Captured) {
+  public override capture<Captured extends General>(
+    value: Captured,
+  ): Ownership<General, Captured, State, ReleasePayload> {
     return super.capture(value)
   }
   /**
@@ -118,7 +120,7 @@ export class Ownership<
    *
    * @see https://github.com/valooford/borrowing#ownershipexpectpayload
    */
-  public override expectPayload<ReleasePayload>() {
+  public override expectPayload<ReleasePayload>(): Ownership<General, Captured, State, ReleasePayload> {
     return super.expectPayload<ReleasePayload>()
   }
   /**
@@ -145,7 +147,7 @@ export class Ownership<
    *
    * @see https://github.com/valooford/borrowing#ownershipgive
    */
-  public override give() {
+  public override give(): ProviderOwnership<General, General | undefined, 'unknown', ReleasePayload> | undefined {
     return super.give()
   }
   /**
@@ -178,7 +180,7 @@ export class Ownership<
    *
    * @see https://github.com/valooford/borrowing#ownershiptake
    */
-  public override take() {
+  public override take(): Captured {
     return super.take()
   }
 }
@@ -264,7 +266,7 @@ export class ProviderOwnership<
    *
    * @see https://github.com/valooford/borrowing#ownershipexpectpayload
    */
-  public override expectPayload<ReleasePayload>() {
+  public override expectPayload<ReleasePayload>(): Ownership<General, Captured, State, ReleasePayload> {
     return super.expectPayload<ReleasePayload>()
   }
   /**
@@ -291,7 +293,7 @@ export class ProviderOwnership<
    *
    * @see https://github.com/valooford/borrowing#ownershipgive
    */
-  public override give() {
+  public override give(): ProviderOwnership<General, General | undefined, 'unknown', ReleasePayload> | undefined {
     return super.give()
   }
   /**
@@ -324,7 +326,7 @@ export class ProviderOwnership<
    *
    * @see https://github.com/valooford/borrowing#ownershiptake
    */
-  public override take() {
+  public override take(): Captured {
     return super.take()
   }
 }
