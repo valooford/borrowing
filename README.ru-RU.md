@@ -26,6 +26,23 @@
   <a href="https://github.com/valooford/borrowing/stargazers">Поставить ⭐GitHub</a>
   |
   <a href="https://github.com/valooford/valooford#support">Поддержать автора</a>
+
+  <hr>
+
+> [!IMPORTANT] **Важно**
+>
+> Эта версия `borrowing` находится в разработке. \
+> Документация может быть неактуальна, в API могут (будут) появляться критические изменения. \
+> Свежую бета-версию можно опробовать, установив ее следующим образом:
+>
+> `npm install borrowing@next --save-exact`
+>
+> Новый функционал доступен под `borrowing/next`.
+>
+> \*\*\*
+>
+> Документация текущей (latest) версии находится [здесь](https://github.com/valooford/borrowing).
+
 </p>
 
 ---
@@ -33,16 +50,6 @@
 </div>
 
 [English](./README.md) | Русский
-
-> [!IMPORTANT]
-> **Важно**
->
-> Эта версия `borrowing` находится в разработке. \
-> Документация может быть неактуальна, в API могут (будут) появляться критические изменения. \
-> Свежую бета-версию можно опробовать, установив ее следующим образом: \
-> `npm install borrowing@next --save-exact`
->
-> Документация текущей (latest) версии находится [здесь](https://github.com/valooford/borrowing).
 
 ## Пример
 

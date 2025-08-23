@@ -4,19 +4,21 @@ import type { Branded, BrandOf } from '@shared/types'
 
 export type AnyOwnership<T = any> = InternalConsumerOwnership<T, any, any, any> | BaseOwnership<T, any, any, any>
 
-export interface Options {
+export interface _Options {
   throwOnWrongState: boolean
   takenPlaceholder: any
 }
 export type State = 'given' | 'borrowed' | 'settled'
 export type TypeState = State | 'unknown'
 
+//* don't name type parameters the same as exported members
+//* they conflict when `tsdown` generates declaration files (`tsup` is OK)
 export type _inferTypes<T extends AnyOwnership> =
-  T extends BaseOwnership<infer General, infer Captured, infer State, infer ReleasePayload>
+  T extends BaseOwnership<infer General, infer Captured, infer _State, infer ReleasePayload>
     ? {
         General: General
         Captured: Captured
-        State: State
+        State: _State
         ReleasePayload: ReleasePayload
       }
     : never

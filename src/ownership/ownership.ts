@@ -18,11 +18,11 @@ export class BaseOwnership<
   protected set state(value: OwnershipTypes.State) {
     this._state = value
   }
-  protected readonly options: OwnershipTypes.Options = {
+  protected readonly options: OwnershipTypes._Options = {
     throwOnWrongState: true,
     takenPlaceholder: undefined,
   }
-  constructor(options?: Partial<OwnershipTypes.Options>) {
+  constructor(options?: Partial<OwnershipTypes._Options>) {
     this.options = {
       ...this.options,
       throwOnWrongState: options?.throwOnWrongState ?? this.options.throwOnWrongState,

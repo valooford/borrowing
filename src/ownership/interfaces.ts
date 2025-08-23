@@ -68,7 +68,7 @@ export class Ownership<
    *
    * @see https://github.com/valooford/borrowing#ownershipoptions
    */
-  declare options: OwnershipTypes.Options
+  declare options: OwnershipTypes._Options
   /**
    * @summary
    *
@@ -185,7 +185,7 @@ export class Ownership<
 
 export namespace Ownership {
   /** Runtime borrowing mechanism settings. */
-  export type Options = OwnershipTypes.Options
+  export type Options = OwnershipTypes._Options
   /** The instance parameter types individually, such as `inferTypes<typeof ownership>['Captured']`. */
   export type inferTypes<T extends OwnershipTypes.AnyOwnership> = OwnershipTypes._inferTypes<T>
   /**
@@ -233,7 +233,7 @@ export class InternalConsumerOwnership<
     this.state = value
   }
 
-  declare options: OwnershipTypes.Options
+  declare options: OwnershipTypes._Options
 }
 
 export class ProviderOwnership<
