@@ -27,19 +27,19 @@ in the following code:
 
   <hr>
 
-> [!IMPORTANT]
->
-> This version of `borrowing` is under development. \
-> Documentation may not be up to date, API may (will) have breaking changes. \
-> You can try out the fresh beta version by installing it as follows:
->
-> `npm install borrowing@next --save-exact`
->
-> New functionality is available at the `borrowing/next` entrypoint.
->
-> \*\*\*
->
-> The documentation for the current (latest) version is located [here](https://github.com/valooford/borrowing).
+### Warning 🚧
+
+This version of `borrowing` is under development. \
+Documentation may not be up to date, API may (will) have breaking changes. \
+You can try out the fresh beta version by installing it as follows:
+
+`npm install borrowing@next --save-exact`
+
+New functionality is available at the `borrowing/next` entrypoint.
+
+\*\*\*
+
+The documentation for the current (latest) version is located [here](https://github.com/valooford/borrowing).
 
 </p>
 
