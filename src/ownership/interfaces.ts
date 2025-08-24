@@ -185,7 +185,7 @@ export class Ownership<
   }
 }
 
-export namespace Ownership {
+export declare namespace Ownership {
   /** Runtime borrowing mechanism settings. */
   export type Options = OwnershipTypes._Options
   /** The instance parameter types individually, such as `inferTypes<typeof ownership>['Captured']`. */

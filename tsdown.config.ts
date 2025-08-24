@@ -7,6 +7,10 @@ export default defineConfig((options) => {
     //? do not use cache when updating .d.ts (https://github.com/sxzz/rolldown-plugin-dts?tab=readme-ov-file#newcontext)
     newContext: options.watch === true,
   }
+
+  const onSuccess = ['pnpm vitest run']
+  if (!options.watch) onSuccess.push('api-extractor run --local --verbose')
+
   return [
     {
       entry: ['src/next.ts'],
@@ -23,7 +27,7 @@ export default defineConfig((options) => {
       hash: false,
       target: 'esnext',
       dts,
-      onSuccess: 'pnpm vitest run',
+      onSuccess: onSuccess.join(' && '),
     },
   ]
 })

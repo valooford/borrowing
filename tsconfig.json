@@ -1,6 +1,6 @@
 {
   "include": ["global.d.ts", "**/*"],
-  "exclude": ["dist", "*.ts", "scripts/**/*"],
+  "exclude": ["dist", "*.config.ts", "scripts/**/*"],
 
   // Based on https://bun.sh/docs/typescript
   "compilerOptions": {
@@ -31,6 +31,7 @@
     /* ++++++++ */
 
     "declaration": true,
+    "declarationMap": true,
     "isolatedDeclarations": true,
     "strictNullChecks": true,
     "baseUrl": ".",
@@ -41,4 +42,16 @@
     },
     "types": ["vitest/globals"]
   }
+
+  /* `tsc --project tsconfig.types.json` */
+
+  // "include": ["global.d.ts", "src/**/*"],
+  // "exclude": ["**/*.test.ts", "**/*.test-d.ts"],
+  // "files": ["src/index.ts"],
+  // "rootDir": "src",
+  // "outDir": "dist",
+  // "emitDeclarationOnly": true,
+  // "compilerOptions": {
+  //   "noEmit": false,
+  // }
 }

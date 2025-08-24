@@ -23,11 +23,13 @@ export type _inferTypes<T extends AnyOwnership> =
       }
     : never
 
-export interface _GenericBounds<General = any, ReleasePayload = any, Captured = any, State = any> {
-  General: General
-  Captured: Captured
-  State: State
-  ReleasePayload: ReleasePayload
+//* don't name type parameters the same as public type parameters (`Ownership.GenericBounds<...>`)
+//* causes `api-extractor` to throw a mysterious ERROR: Child declaration not found for the specified node
+export interface _GenericBounds<$General = any, $ReleasePayload = any, $Captured = any, $State = any> {
+  General: $General
+  Captured: $Captured
+  State: $State
+  ReleasePayload: $ReleasePayload
 }
 export type ParamsBounds<T extends _GenericBounds> =
   | BaseOwnership<T['General'], T['Captured'] | undefined, T['State'], T['ReleasePayload']>

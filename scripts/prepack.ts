@@ -21,6 +21,24 @@ async function prepack() {
     dot: true,
     onlyFiles: true,
   })
+  //? `globby` fails with glob patterns like '!dist/**/*[!.map]' (1/3)
+  // const filesSet = new Set(files)
+
+  // filter out *.map files
+  const distFiles = await globby(
+    [
+      // 'dist/**/*', //? `globby` issue (2/3)
+      'dist/**/*.map',
+    ],
+    {
+      dot: true,
+      onlyFiles: true,
+    },
+  )
+  for (const file of distFiles) {
+    // if (!filesSet.has(file)) //? `globby` issue (2/3)
+    fs.unlinkSync(file)
+  }
 
   // from https://docs.npmjs.com/cli/v9/using-npm/developers#keeping-files-out-of-your-package
   const neverIgnored = ['package.json', 'README*', 'CHANGELOG*', 'LICEN[SC]E']
