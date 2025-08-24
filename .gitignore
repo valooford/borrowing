@@ -15,3 +15,6 @@ node_modules/
 
 # Build / generate output
 dist
+
+# API Extractor temporary files
+temp

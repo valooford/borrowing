@@ -10,7 +10,7 @@ const tseslint = { parser, configs }
 type Config = ReturnType<typeof defineConfig>[number]
 
 export default defineConfig([
-  globalIgnores(['dist/*', '*.config.ts', 'scripts/**/*'], 'Ignore irrelevant files'),
+  globalIgnores(['dist/*'], 'Ignore irrelevant files'),
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     plugins: { js },

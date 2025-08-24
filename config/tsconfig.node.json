@@ -1,5 +1,6 @@
 {
-  "include": ["config/global.d.ts", "src/**/*"],
+  "include": ["../config/global.d.ts", "../**/*"],
+  "exclude": ["../src"],
 
   // Based on https://bun.sh/docs/typescript
   "compilerOptions": {
@@ -11,9 +12,9 @@
 
     // Bundler mode
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    // "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
-    "noEmit": true,
+    // "noEmit": true, //? Referenced project may not disable emit.
 
     // Best practices
     "strict": true,
@@ -29,9 +30,11 @@
 
     /* ++++++++ */
 
+    "composite": true,
+
     "declaration": true,
     "declarationMap": true,
-    "isolatedDeclarations": true,
+    // "isolatedDeclarations": true,
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
@@ -40,19 +43,5 @@
       "@shared/*": ["./src/shared/*"]
     },
     "types": ["vitest/globals"]
-  },
-
-  "references": [{ "path": "./config/tsconfig.node.json" }]
-
-  /* `tsc --project tsconfig.types.json` */
-
-  // "include": ["config/global.d.ts", "src/**/*"],
-  // "exclude": ["**/*.test.ts", "**/*.test-d.ts"],
-  // "files": ["src/index.ts"],
-  // "rootDir": "src",
-  // "outDir": "dist",
-  // "emitDeclarationOnly": true,
-  // "compilerOptions": {
-  //   "noEmit": false,
-  // }
+  }
 }

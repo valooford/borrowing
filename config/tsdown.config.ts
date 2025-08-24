@@ -8,7 +8,7 @@ export default defineConfig((options) => {
     newContext: options.watch === true,
   }
 
-  const onSuccess = ['pnpm vitest run']
+  const onSuccess = ['pnpm test']
   if (!options.watch) onSuccess.push('api-extractor run --local --verbose')
 
   return [

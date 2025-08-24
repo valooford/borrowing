@@ -1,3 +1,8 @@
+# Ignore itself
+.default.npmignore
+
+# from https://docs.npmjs.com/cli/v9/using-npm/developers#keeping-files-out-of-your-package
+
 node_modules
 .git
 

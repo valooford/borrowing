@@ -15,14 +15,22 @@ async function prepack() {
   // COPY included files //
   /////////////////////////
 
+  const defaultIgnoreFile = path.join(import.meta.dirname, '.default.npmignore')
+  const tempRootIgnoreFile = path.resolve(process.cwd(), path.basename(defaultIgnoreFile))
+  console.log('defaultIgnoreFile', defaultIgnoreFile)
+  console.log('tempRootIgnoreFile', tempRootIgnoreFile)
+  fs.copyFileSync(defaultIgnoreFile, tempRootIgnoreFile)
+
   // https://github.com/sindresorhus/globby
   let files = await globby(['**/*'], {
-    ignoreFiles: ['.default.npmignore', '.npmignore'],
+    ignoreFiles: [path.basename(tempRootIgnoreFile), '.npmignore'], //? must be located at the root
     dot: true,
     onlyFiles: true,
   })
   //? `globby` fails with glob patterns like '!dist/**/*[!.map]' (1/3)
   // const filesSet = new Set(files)
+
+  fs.unlinkSync(tempRootIgnoreFile)
 
   // filter out *.map files
   const distFiles = await globby(

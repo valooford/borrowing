@@ -20,12 +20,12 @@
     "pnpm": ">=10.0.0"
   },
   "scripts": {
-    "dev": "tsdown --watch",
-    "build": "tsdown",
+    "dev": "tsdown --watch -c config/tsdown.config.ts",
+    "build": "tsdown -c config/tsdown.config.ts",
     "lint": "eslint . --cache --flag unstable_native_nodejs_ts_config",
     "format": "prettier . --write",
-    "test": "vitest run",
-    "prepack": "node --experimental-strip-types ./scripts/prepack.ts",
+    "test": "vitest run -c config/vitest.config.ts",
+    "prepack": "node --experimental-strip-types ./config/prepack.ts",
     "pack": "pnpm prepack && cd dist && pnpm pack --pack-destination ..",
     "prerelease": "pnpm version prerelease --preid beta",
     "publish:npm": "pnpm prepack && cd dist && pnpm publish --access public --tag next"
