@@ -15,9 +15,10 @@ describe('Ownership', () => {
     const ownership = new Ownership<number>()
     expectTypeOf(ownership).toEqualTypeOf<Ownership<number, unknown, Branded<'settled', 'released'>, unknown>>()
   })
-  describe('', () => {
-    type Test = Ownership<'first', 'second', 'unknown', 'fourth'>
-    expectTypeOf<Ownership.inferTypes<Test>>().toEqualTypeOf<{
+  describe('should have inferrable types', () => {
+    type Instance = Ownership<'first', 'second', 'unknown', 'fourth'>
+    type InstanceTypes = Ownership.inferTypes<Instance>
+    expectTypeOf<InstanceTypes>().toEqualTypeOf<{
       General: 'first'
       Captured: 'second'
       State: 'unknown'

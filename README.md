@@ -24,6 +24,17 @@ in the following code:
   <a href="https://github.com/valooford/borrowing/stargazers">Become a 🧙Stargazer</a>
   |
   <a href="https://github.com/valooford/valooford#support">Support the author</a>
+
+  <hr>
+
+### 📢 V1 is on its way!
+
+You can follow the development on [GitHub](https://github.com/valooford/borrowing/tree/main), and try out\* the beta versions:
+
+`npm install borrowing@next --save-exact`
+
+(\*) - The API is experimental and may change in the release version.
+
 </p>
 
 ---
@@ -31,13 +42,6 @@ in the following code:
 </div>
 
 English | [Русский](./README.ru-RU.md)
-
-> [!NOTE]
->
-> V1 is on its way! You can follow the development on [GitHub](https://github.com/valooford/borrowing/tree/main), and try out\* the beta versions: \
-> `npm install borrowing@next --save-exact`
->
-> (\*) - The API is experimental and may change in the release version.
 
 ## Example
 
