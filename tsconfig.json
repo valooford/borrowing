@@ -1,6 +1,6 @@
 {
-  "include": ["global.d.ts", "src/**/*"],
-  "exclude": ["dist"],
+  "include": ["global.d.ts", "**/*"],
+  "exclude": ["dist", "*.ts", "scripts/**/*"],
 
   // Based on https://bun.sh/docs/typescript
   "compilerOptions": {
