@@ -8,5 +8,10 @@
     // https://github.com/microsoft/vscode-eslint/issues/2003#issuecomment-2794039639
     "flags": ["unstable_native_nodejs_ts_config"]
   },
-  "git.followTagsWhenSync": true
+  "git.followTagsWhenSync": true,
+  "files.associations": {
+    // comments are allowed in these files
+    "api-extractor.json": "jsonc",
+    "tsdoc.json": "jsonc"
+  }
 }

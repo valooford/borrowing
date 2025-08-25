@@ -1,6 +1,7 @@
 import js from '@eslint/js'
 import { Linter } from 'eslint'
 import importPlugin from 'eslint-plugin-import'
+import tsdoc from 'eslint-plugin-tsdoc'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import { configs, parser } from 'typescript-eslint'
@@ -63,6 +64,15 @@ export default defineConfig([
           ignoreRestSiblings: true,
         },
       ],
+    },
+  },
+  // https://www.npmjs.com/package/eslint-plugin-tsdoc
+  {
+    files: ['**/*.{ts,tsx}'],
+    ignores: ['src/{asserts,ownership}/**/*'],
+    plugins: { tsdoc },
+    rules: {
+      'tsdoc/syntax': 'error',
     },
   },
 ])
