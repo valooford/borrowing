@@ -1,5 +1,5 @@
 {
-  "include": ["../config/global.d.ts", "../**/*"],
+  "include": ["../config/types/*.d.ts", "../**/*"],
   "exclude": ["../src"],
 
   // Based on https://bun.sh/docs/typescript
@@ -30,8 +30,6 @@
 
     /* ++++++++ */
 
-    "composite": true,
-
     "declaration": true,
     "declarationMap": true,
     // "isolatedDeclarations": true,
@@ -42,6 +40,14 @@
       "@ownership/*": ["./src/ownership/*"],
       "@shared/*": ["./src/shared/*"]
     },
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+
+    /* ++++++++ */
+
+    "composite": true,
+
+    //? file://./documenter.ts import issue ERR_MODULE_NOT_FOUND (from './retsdoc')
+    "emitDeclarationOnly": true,
+    "allowImportingTsExtensions": true
   }
 }

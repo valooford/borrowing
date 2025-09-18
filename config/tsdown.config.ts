@@ -8,7 +8,7 @@ export default defineConfig((options) => {
     newContext: options.watch === true,
   }
 
-  const onSuccess = ['pnpm test']
+  const onSuccess = ['node --experimental-strip-types ./config/preservePackageDocumentation.ts', 'pnpm test']
   if (!options.watch) onSuccess.push('api-extractor run --local --verbose')
 
   return [

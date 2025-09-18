@@ -1,3 +1,4 @@
+/** */
 declare const __brand: unique symbol
 interface Brand<B> {
   [__brand]: B

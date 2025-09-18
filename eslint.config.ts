@@ -11,7 +11,7 @@ const tseslint = { parser, configs }
 type Config = ReturnType<typeof defineConfig>[number]
 
 export default defineConfig([
-  globalIgnores(['dist/*'], 'Ignore irrelevant files'),
+  globalIgnores(['dist/*', 'config/types/unist-util-visit.d.ts'], 'Ignore irrelevant files'),
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     plugins: { js },

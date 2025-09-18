@@ -8,7 +8,7 @@
 // Warning: (ae-forgotten-export) The symbol "PubParamsBounds" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "ConsumerOwnership" needs to be exported by the entry point index.d.ts
 //
-// @public
+// @public (undocumented)
 export function borrow<T extends _GenericBounds>(ownership: PubParamsBounds<T>): asserts ownership is ConsumerOwnership<T["General"], T["Captured"], any, T["ReleasePayload"]>;
 
 // Warning: (ae-forgotten-export) The symbol "Brand" needs to be exported by the entry point index.d.ts
@@ -25,22 +25,30 @@ export type BrandOf<T> = T extends Branded<any, infer B> ? B : never;
 // Warning: (ae-forgotten-export) The symbol "AnyOwnership" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "_inferTypes" needs to be exported by the entry point index.d.ts
 //
-// @public
+// @public (undocumented)
 export function drop<T extends AnyOwnership, TMap extends _inferTypes<T>>(ownership: T | undefined, payloadOrReceiver?: TMap["ReleasePayload"] | ((payload: TMap["ReleasePayload"]) => void)): asserts ownership is undefined;
 
 // Warning: (ae-forgotten-export) The symbol "TypeState" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseOwnership" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "Ownership" is marked as @public, but its signature references "Branded" which is marked as @internal
 //
-// @public
+// @public (undocumented)
 export class Ownership<General, Captured = unknown, State extends TypeState = Branded<"settled", "released">, ReleasePayload = unknown> extends BaseOwnership<General, Captured, State, ReleasePayload> {
+    // (undocumented)
     capture<Captured extends General>(value: Captured): Ownership<General, Captured, State, ReleasePayload>;
+    // (undocumented)
     readonly captured: Captured;
+    // (undocumented)
     expectPayload<ReleasePayload>(): Ownership<General, Captured, State, ReleasePayload>;
     // Warning: (ae-forgotten-export) The symbol "ProviderOwnership" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
     give(): ProviderOwnership<General, General | undefined, "unknown", ReleasePayload> | undefined;
     // Warning: (ae-forgotten-export) The symbol "_Options" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
     options: _Options;
+    // (undocumented)
     take(): Captured;
 }
 
@@ -56,12 +64,10 @@ export namespace Ownership {
     export type ParamsBounds<T extends GenericBounds> = PubParamsBounds<T>;
 }
 
-// @public
+// @public (undocumented)
 export function release<T extends AnyOwnership, TMap extends _inferTypes<T>>(ownership: T | undefined, value?: TMap["General"], payload?: TMap["ReleasePayload"]): asserts ownership is undefined;
 
-// @public
+// @public (undocumented)
 export function take<T extends AnyOwnership, TMap extends _inferTypes<T>>(ownership: T | undefined, receiver: (value: NonNullable<TMap["Captured"]>, payload: TMap["ReleasePayload"]) => void): asserts ownership is undefined;
-
-// (No @packageDocumentation comment for this package)
 
 ```

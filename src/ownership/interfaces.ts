@@ -62,8 +62,8 @@ export class Ownership<
    * Allows to customize aspects of how borrowing mechanisms work at runtime. \
    * Are public before any use of the `Ownership` instance.
    *
-   * | Option            | Type      | Default | Description                                                                               |
-   * | ----------------- | --------- | ------- | ----------------------------------------------------------------------------------------- |
+   * | Option            | Type      | Default | Description                                                                               | \
+   * | ----------------- | --------- | ------- | ----------------------------------------------------------------------------------------- | \
    * | throwOnWrongState | `boolean` | `true`  | Throw error when ownership/borrowing state changes fail via built-in assertion functions. |
    *
    * @see https://github.com/valooford/borrowing#ownershipoptions

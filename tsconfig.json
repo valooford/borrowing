@@ -1,5 +1,5 @@
 {
-  "include": ["config/global.d.ts", "src/**/*"],
+  "include": ["config/types/global.d.ts", "src/**/*"],
 
   // Based on https://bun.sh/docs/typescript
   "compilerOptions": {

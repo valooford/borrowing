@@ -19,7 +19,7 @@ export default {
       },
     },
     {
-      files: ['**/*.tsx?'],
+      files: ['**/*.ts'],
       options: {
         plugins: ['@ianvs/prettier-plugin-sort-imports'],
 
