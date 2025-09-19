@@ -54,17 +54,28 @@ import { isOwnership } from '@ownership/utils/isOwnership'
  *
  * @see https://github.com/valooford/borrowing#take
  */
-export function take<T extends OwnershipTypes.AnyOwnership, TMap extends OwnershipTypes._inferTypes<T>>(
+export function take<
+  T extends OwnershipTypes.AnyOwnership,
+  TMap extends OwnershipTypes._inferTypes<T>,
+>(
   ownership: T | undefined,
-  receiver: (value: NonNullable<TMap['Captured']>, payload: TMap['ReleasePayload']) => void,
+  receiver: (
+    value: NonNullable<TMap['Captured']>,
+    payload: TMap['ReleasePayload'],
+  ) => void,
 ): asserts ownership is undefined {
   isOwnership<TMap>(ownership)
   if (ownership.state !== 'settled') {
     if (!ownership.options.throwOnWrongState) return
-    throw Error('Unable to take (not settled), call `release` or `drop` first or remove `give` call')
+    throw Error(
+      'Unable to take (not settled), call `release` or `drop` first or remove `give` call',
+    )
   }
   const { takenPlaceholder } = ownership.options
-  if (ownership.captured === takenPlaceholder && ownership.releasePayload === takenPlaceholder) {
+  if (
+    ownership.captured === takenPlaceholder &&
+    ownership.releasePayload === takenPlaceholder
+  ) {
     if (!ownership.options.throwOnWrongState) {
       receiver(ownership.captured, ownership.releasePayload)
       return

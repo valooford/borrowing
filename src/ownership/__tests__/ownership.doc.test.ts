@@ -8,7 +8,9 @@ describe('Ownership', () => {
   describe('constructor', () => {
     test('@example', () => {
       type Status = 'pending' | 'success' | 'error'
-      const ownership = new Ownership<Status>({ throwOnWrongState: false }).give()
+      const ownership = new Ownership<Status>({
+        throwOnWrongState: false,
+      }).give()
       expect(() => take(ownership, () => void 0)).not.toThrow()
     })
   })
@@ -56,7 +58,9 @@ describe('Ownership', () => {
   describe('#give()', () => {
     test('@example', () => {
       const ownership = new Ownership<string>().capture('pending' as const)
-      expect(() => _assert(ownership)).toThrow('Unable to borrow (not given), call `give` first')
+      expect(() => _assert(ownership)).toThrow(
+        'Unable to borrow (not given), call `give` first',
+      )
       const ownershipArg = ownership.give()
       expect(() => _assert(ownershipArg)).not.toThrow()
 

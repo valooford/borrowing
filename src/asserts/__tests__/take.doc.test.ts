@@ -26,7 +26,9 @@ describe('take', () => {
         _assert(ownership)
         let _dst = ownership.take()
         expect(_dst).toBe(123)
-        expect(() => take(ownership, (value) => (_dst = value))).toThrow('Unable to take (already taken)')
+        expect(() => take(ownership, (value) => (_dst = value))).toThrow(
+          'Unable to take (already taken)',
+        )
       }
 
       {
@@ -34,7 +36,9 @@ describe('take', () => {
         _assert(ownership)
         let _dst: number
         expect(() => take(ownership, (value) => (_dst = value))).not.toThrow()
-        expect(() => take(ownership, (value) => (_dst = value))).toThrow('Unable to take (already taken)')
+        expect(() => take(ownership, (value) => (_dst = value))).toThrow(
+          'Unable to take (already taken)',
+        )
       }
     })
   }
@@ -53,7 +57,9 @@ describe('take', () => {
       test('2nd', () => {
         const ownership = new Ownership<number>().capture(123 as const)
         take(ownership, (value) => (_dst = value))
-        expect(() => take(ownership, (value) => (_dst = value))).toThrow('Unable to take (already taken)')
+        expect(() => take(ownership, (value) => (_dst = value))).toThrow(
+          'Unable to take (already taken)',
+        )
       })
     }
   })

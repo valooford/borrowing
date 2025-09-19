@@ -27,11 +27,17 @@ declare module 'unist-util-visit' {
    * automatic `.d.ts` files, TS tries to flatten paths from a local perspective,
    * which doesn’t work when publishing on npm.
    */
-  export type Test = Exclude<import('unist-util-is').Test, undefined> | undefined
+  export type Test =
+    | Exclude<import('unist-util-is').Test, undefined>
+    | undefined
   /**
    * Get the value of a type guard `Fn`.
    */
-  export type Predicate<Fn, Fallback> = Fn extends (value: any) => value is infer Thing ? Thing : Fallback
+  export type Predicate<Fn, Fallback> = Fn extends (
+    value: any,
+  ) => value is infer Thing
+    ? Thing
+    : Fallback
   /**
    * Check whether a node matches a primitive check in the type system.
    */
@@ -52,7 +58,9 @@ declare module 'unist-util-visit' {
    * Check whether a node matches a check in the type system.
    */
   export type Matches<Value, Check> =
-    Check extends Array<any> ? MatchesOne<Value, Check[keyof Check]> : MatchesOne<Value, Check>
+    Check extends Array<any>
+      ? MatchesOne<Value, Check[keyof Check]>
+      : MatchesOne<Value, Check>
   /**
    * Number; capped reasonably.
    */
@@ -97,10 +105,10 @@ declare module 'unist-util-visit' {
   /**
    * Collect nodes in `Tree` that can be parents of `Child`.
    */
-  export type Parent<Tree extends import('unist').Node, Child extends import('unist').Node> = InternalParent<
-    InclusiveDescendant<Tree>,
-    Child
-  >
+  export type Parent<
+    Tree extends import('unist').Node,
+    Child extends import('unist').Node,
+  > = InternalParent<InclusiveDescendant<Tree>, Child>
   /**
    * Collect nodes in `Tree` that can be ancestors of `Child`.
    */
@@ -111,7 +119,14 @@ declare module 'unist-util-visit' {
     Depth extends Uint = 0,
   > = Depth extends Max
     ? never
-    : InternalParent<Node, Child> | InternalAncestor<Node, InternalParent<Node, Child>, Max, Increment<Depth>>
+    :
+        | InternalParent<Node, Child>
+        | InternalAncestor<
+            Node,
+            InternalParent<Node, Child>,
+            Max,
+            Increment<Depth>
+          >
   /**
    * Collect all (inclusive) descendants of `Tree`.
    *
@@ -131,7 +146,9 @@ declare module 'unist-util-visit' {
   > = Tree extends UnistParent
     ? Depth extends Max
       ? Tree
-      : Tree | InclusiveDescendant<Tree['children'][number], Max, Increment<Depth>>
+      :
+          | Tree
+          | InclusiveDescendant<Tree['children'][number], Max, Increment<Depth>>
     : Tree
   /**
    * Handle a node (matching `test`, if given).
@@ -176,7 +193,10 @@ declare module 'unist-util-visit' {
   export type BuildVisitorFromDescendants<
     Descendant extends import('unist').Node,
     Check extends Test,
-  > = BuildVisitorFromMatch<Matches<Descendant, Check>, Extract<Descendant, UnistParent>>
+  > = BuildVisitorFromMatch<
+    Matches<Descendant, Check>,
+    Extract<Descendant, UnistParent>
+  >
   /**
    * Build a typed `Visitor` function from a tree and a test.
    *

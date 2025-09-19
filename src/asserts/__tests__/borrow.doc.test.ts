@@ -22,7 +22,9 @@ describe('borrow', () => {
     const value = 123
     test('@description', () => {
       const ownership = new Ownership<number>().give()
-      expect(() => _assert(ownership)).toThrow('Unable to release (not borrowed), call `borrow` first')
+      expect(() => _assert(ownership)).toThrow(
+        'Unable to release (not borrowed), call `borrow` first',
+      )
 
       function _assert<T extends Ownership.GenericBounds<number>>(
         ownership: Ownership.ParamsBounds<T> | undefined,
@@ -33,7 +35,9 @@ describe('borrow', () => {
   }
   test('@throws', () => {
     const ownership = new Ownership<number>()
-    expect(() => _assert(ownership)).toThrow('Unable to borrow (not given), call `give` first')
+    expect(() => _assert(ownership)).toThrow(
+      'Unable to borrow (not given), call `give` first',
+    )
 
     function _assert<T extends Ownership.GenericBounds<number>>(
       ownership: Ownership.ParamsBounds<T> | undefined,

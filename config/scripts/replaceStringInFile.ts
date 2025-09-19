@@ -18,4 +18,8 @@ if (!filePath || !from || !to) {
   process.exit(1)
 }
 
-await replaceStringInFile(filePath, from.replaceAll(path.sep, '/'), to.replaceAll(path.sep, '/'))
+await replaceStringInFile(
+  filePath,
+  from.replaceAll(path.sep, '/'),
+  to.replaceAll(path.sep, '/'),
+)

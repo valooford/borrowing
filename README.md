@@ -73,7 +73,10 @@ Implementation of assertions functions:
 // lib.ts
 import { borrow, drop, Ownership, release } from 'borrowing'
 
-export function replaceStr<V extends string, T extends Ownership.GenericBounds<string>>(
+export function replaceStr<
+  V extends string,
+  T extends Ownership.GenericBounds<string>,
+>(
   ownership: Ownership.ParamsBounds<T> | undefined,
   value: V,
 ): asserts ownership is Ownership.MorphAssertion<T, V> {
@@ -126,7 +129,9 @@ You can remove the `scope` property in single-language snippet files.
   "Create borrowing-ready `Ownership` instance": {
     "scope": "typescript,typescriptreact",
     "prefix": "ownership",
-    "body": ["new Ownership<${1:string}>().capture(${2:'hello'} as const).give();"],
+    "body": [
+      "new Ownership<${1:string}>().capture(${2:'hello'} as const).give();",
+    ],
   },
   "Give settled `Ownership` again": {
     "scope": "typescript,typescriptreact",
@@ -198,7 +203,9 @@ _WORK_IN_PROGRESS: boolean
 interface State {
   value: string
 }
-let ownership = new Ownership<State>({ throwOnWrongState: false }).capture({ value: 'open' } as const).give()
+let ownership = new Ownership<State>({ throwOnWrongState: false })
+  .capture({ value: 'open' } as const)
+  .give()
 update(ownership, 'closed')
 const v1 = ownership.take().value // type 'closed'
 update(ownership, 'open')
@@ -208,7 +215,10 @@ ownership = ownership.give()
 update(ownership, 'open')
 const v3 = ownership.take().value // type 'open'
 
-function update<T extends Ownership.GenericBounds<State>, V extends 'open' | 'closed'>(
+function update<
+  T extends Ownership.GenericBounds<State>,
+  V extends 'open' | 'closed',
+>(
   ownership: Ownership.ParamsBounds<T> | undefined,
   value: V,
 ): asserts ownership is Ownership.MorphAssertion<T, { value: V }> {

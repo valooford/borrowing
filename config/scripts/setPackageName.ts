@@ -13,7 +13,10 @@ async function setPackageName(name: string) {
 
     packageJson.name = name
 
-    await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n')
+    await writeFile(
+      packageJsonPath,
+      JSON.stringify(packageJson, null, 2) + '\n',
+    )
     console.log(`Package name updated to: ${name}`)
   } catch (error) {
     console.error('Error updating package name:', error)
@@ -28,7 +31,11 @@ if (!name) {
 }
 name = name.replaceAll(path.sep, '/')
 // shouldn't start with: -._~
-if (!/^(?:(?:@(?:[a-z0-9][a-z0-9-*._~]*)?\/[a-z0-9-._~])|[a-z0-9])[a-z0-9-._~]*$/.test(name)) {
+if (
+  !/^(?:(?:@(?:[a-z0-9][a-z0-9-*._~]*)?\/[a-z0-9-._~])|[a-z0-9])[a-z0-9-._~]*$/.test(
+    name,
+  )
+) {
   console.error(
     `String "${name}" does not match the pattern of \
     "^(?:(?:@(?:[a-z0-9][a-z0-9-*._~]*)?/[a-z0-9-._~])|[a-z0-9])[a-z0-9-._~]*$"`,

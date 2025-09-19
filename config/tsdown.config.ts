@@ -2,7 +2,8 @@ import type { Options } from 'tsdown'
 
 import { defineConfig } from 'tsdown'
 
-const nodeTs = (scriptAndArgs: string) => `node --experimental-strip-types ${scriptAndArgs}`
+const nodeTs = (scriptAndArgs: string) =>
+  `node --experimental-strip-types ${scriptAndArgs}`
 
 export default defineConfig((options) => {
   const dts: Options['dts'] = {
@@ -19,7 +20,9 @@ export default defineConfig((options) => {
       // nodeTs('./config/scripts/preservePackageDocumentation.ts next.ts next/index.d.ts'),
       nodeTs('./config/scripts/setPackageName.ts "@temp/borrowing"'),
       'api-extractor run --local --verbose -c config/api-extractor.next.json',
-      nodeTs('./config/scripts/replaceStringInFile.ts ./temp/borrowing.next.api.json @temp/borrowing borrowing/next'),
+      nodeTs(
+        './config/scripts/replaceStringInFile.ts ./temp/borrowing.next.api.json @temp/borrowing borrowing/next',
+      ),
       /* cleanup */
       nodeTs('./config/scripts/setPackageName.ts "borrowing"'),
     )

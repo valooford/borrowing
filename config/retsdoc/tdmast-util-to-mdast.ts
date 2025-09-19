@@ -1,4 +1,11 @@
-import type { Block, DocContent, Namespace, Nodes, NodeType, RootContentMap } from './tdmast'
+import type {
+  Block,
+  DocContent,
+  Namespace,
+  Nodes,
+  NodeType,
+  RootContentMap,
+} from './tdmast'
 import type { Proxied } from './tdmast-util-parents'
 import type {
   Heading as MdastHeading,
@@ -26,10 +33,10 @@ interface State<T extends NodeType = NodeType> {
   // TODO: add user data field
 }
 
-type InternalHandle<T extends NodeType, R = T extends typeof ContentKind.Api.Model ? MdastRoot : MdastRootContent[]> = (
-  node: Proxied<RootContentMap[T]>,
-  state: State<T>,
-) => R
+type InternalHandle<
+  T extends NodeType,
+  R = T extends typeof ContentKind.Api.Model ? MdastRoot : MdastRootContent[],
+> = (node: Proxied<RootContentMap[T]>, state: State<T>) => R
 
 type PartialState<T extends State = State> = {
   [K in keyof T]?: K extends 'handlers'
@@ -53,7 +60,11 @@ type InternalHandlers = {
 }
 
 type Handlers = {
-  [kind in keyof InternalHandlers]: InternalHandlers[kind] extends InternalHandle<infer T> ? Handle<T> : never
+  [kind in keyof InternalHandlers]: InternalHandlers[kind] extends InternalHandle<
+    infer T
+  >
+    ? Handle<T>
+    : never
 }
 
 type Options = Readonly<{
@@ -69,18 +80,25 @@ const defaultHandlers: InternalHandlers = {
     const res = u('root', [] as MdastRootContent[])
 
     const packageNodes = find(node, { data: node.data.packages })
-    if (packageNodes?.length) res.children.push(...packageNodes.flatMap((n) => state.handlers[n.type](n)))
+    if (packageNodes?.length)
+      res.children.push(
+        ...packageNodes.flatMap((n) => state.handlers[n.type](n)),
+      )
 
     return res as MdastRoot
   },
   [ContentKind.Api.Package]: (node, state) => {
     const res: MdastRootContent[] = []
 
-    const title = [u('inlineCode', node.data.displayName), u('text', ' package')]
+    const title = [
+      u('inlineCode', node.data.displayName),
+      u('text', ' package'),
+    ]
     if (state.options.headingBaseDepth === 6) {
       res.push(u('paragraph', [u('strong', title)]))
     } else {
-      const depth = (state.options.headingBaseDepth + 1) as MdastHeading['depth']
+      const depth = (state.options.headingBaseDepth +
+        1) as MdastHeading['depth']
       res.push(u('heading', { depth } as const, title))
     }
 
@@ -89,8 +107,15 @@ const defaultHandlers: InternalHandlers = {
 
     const entryPointNodes = find(node, { data: node.data.entryPoints })
     if (entryPointNodes?.length) {
-      const headingBaseDepth = Math.min(6, state.options.headingBaseDepth + 1) as MdastHeading['depth']
-      res.push(...entryPointNodes.flatMap((n) => state.handlers[n.type](n, { options: { headingBaseDepth } })))
+      const headingBaseDepth = Math.min(
+        6,
+        state.options.headingBaseDepth + 1,
+      ) as MdastHeading['depth']
+      res.push(
+        ...entryPointNodes.flatMap((n) =>
+          state.handlers[n.type](n, { options: { headingBaseDepth } }),
+        ),
+      )
     }
 
     return res
@@ -103,18 +128,24 @@ const defaultHandlers: InternalHandlers = {
       if (state.options.headingBaseDepth === 6) {
         return u('paragraph', [u('strong', title)])
       } else {
-        const depth = (state.options.headingBaseDepth + 1) as MdastHeading['depth']
+        const depth = (state.options.headingBaseDepth +
+          1) as MdastHeading['depth']
         return u('heading', { depth } as const, title)
       }
     }
 
-    const headingBaseDepth = Math.min(6, state.options.headingBaseDepth + 1) as MdastHeading['depth']
+    const headingBaseDepth = Math.min(
+      6,
+      state.options.headingBaseDepth + 1,
+    ) as MdastHeading['depth']
 
     const classNodes = find(node, { type: [ContentKind.Api.Class] })
     if (classNodes?.length) {
       res.push(
         buildMemberTitle('Classes'),
-        ...classNodes.flatMap((n) => state.handlers[n.type](n, { options: { headingBaseDepth } })),
+        ...classNodes.flatMap((n) =>
+          state.handlers[n.type](n, { options: { headingBaseDepth } }),
+        ),
       )
     }
 
@@ -122,7 +153,9 @@ const defaultHandlers: InternalHandlers = {
     if (enumNodes?.length) {
       res.push(
         buildMemberTitle('Enumerations'),
-        ...enumNodes.flatMap((n) => state.handlers[n.type](n, { options: { headingBaseDepth } })),
+        ...enumNodes.flatMap((n) =>
+          state.handlers[n.type](n, { options: { headingBaseDepth } }),
+        ),
       )
     }
 
@@ -130,7 +163,9 @@ const defaultHandlers: InternalHandlers = {
     if (functionNodes?.length) {
       res.push(
         buildMemberTitle('Functions'),
-        ...functionNodes.flatMap((n) => state.handlers[n.type](n, { options: { headingBaseDepth } })),
+        ...functionNodes.flatMap((n) =>
+          state.handlers[n.type](n, { options: { headingBaseDepth } }),
+        ),
       )
     }
 
@@ -138,7 +173,9 @@ const defaultHandlers: InternalHandlers = {
     if (interfaceNodes?.length) {
       res.push(
         buildMemberTitle('Interfaces'),
-        ...interfaceNodes.flatMap((n) => state.handlers[n.type](n, { options: { headingBaseDepth } })),
+        ...interfaceNodes.flatMap((n) =>
+          state.handlers[n.type](n, { options: { headingBaseDepth } }),
+        ),
       )
     }
 
@@ -162,7 +199,9 @@ const defaultHandlers: InternalHandlers = {
     if (variableNodes?.length) {
       res.push(
         buildMemberTitle('Variables'),
-        ...variableNodes.flatMap((n) => state.handlers[n.type](n, { options: { headingBaseDepth } })),
+        ...variableNodes.flatMap((n) =>
+          state.handlers[n.type](n, { options: { headingBaseDepth } }),
+        ),
       )
     }
 
@@ -170,7 +209,9 @@ const defaultHandlers: InternalHandlers = {
     if (typeAliasNodes?.length) {
       res.push(
         buildMemberTitle('Type Aliases'),
-        ...typeAliasNodes.flatMap((n) => state.handlers[n.type](n, { options: { headingBaseDepth } })),
+        ...typeAliasNodes.flatMap((n) =>
+          state.handlers[n.type](n, { options: { headingBaseDepth } }),
+        ),
       )
     }
 
@@ -184,7 +225,8 @@ const defaultHandlers: InternalHandlers = {
     if (state.options.headingBaseDepth === 6) {
       builder.add(u('paragraph', [u('strong', title)]))
     } else {
-      const depth = (state.options.headingBaseDepth + 1) as MdastHeading['depth']
+      const depth = (state.options.headingBaseDepth +
+        1) as MdastHeading['depth']
       builder.add(u('heading', { depth } as const, title))
     }
 
@@ -240,7 +282,10 @@ const defaultHandlers: InternalHandlers = {
   [ContentKind.Api.Property]: (node, state) => {
     const builder = new Builder()
 
-    const title = [u('inlineCode', node.data.displayName), u('text', ' property')]
+    const title = [
+      u('inlineCode', node.data.displayName),
+      u('text', ' property'),
+    ]
     // if (state.options.headingBaseDepth === 6) {
     if (state.options.headingBaseDepth > 1) {
       builder.add(u('paragraph', [u('strong', title)]))
@@ -264,7 +309,10 @@ const defaultHandlers: InternalHandlers = {
       u('code', { lang: 'ts' }, node.data.excerpt.text),
     ])
 
-    const headingBaseDepth = Math.min(6, state.options.headingBaseDepth + 2) as MdastHeading['depth']
+    const headingBaseDepth = Math.min(
+      6,
+      state.options.headingBaseDepth + 2,
+    ) as MdastHeading['depth']
     if (commentNode) {
       builder.add(
         commentNode.children,
@@ -290,7 +338,10 @@ const defaultHandlers: InternalHandlers = {
   [ContentKind.Api.Method]: (node, state) => {
     const builder = new Builder()
 
-    const title = [u('inlineCode', `${node.data.displayName}()`), u('text', ' method')]
+    const title = [
+      u('inlineCode', `${node.data.displayName}()`),
+      u('text', ' method'),
+    ]
     // if (state.options.headingBaseDepth === 6) {
     if (state.options.headingBaseDepth > 1) {
       builder.add(u('paragraph', [u('strong', title)]))
@@ -323,25 +374,40 @@ const defaultHandlers: InternalHandlers = {
       const summaryNode = find(commentNode, {
         data: commentNode.data.summarySection,
       })
-      if (!summaryNode || !find(summaryNode, { data: commentNode.data.returnsBlock })) {
+      if (
+        !summaryNode ||
+        !find(summaryNode, { data: commentNode.data.returnsBlock })
+      ) {
         const returnsNode = find(commentNode, {
           data: commentNode.data.returnsBlock,
         }) as Proxied<Block> | undefined
         if (returnsNode?.children.length) {
           builder.add(u('paragraph', [u('strong', [u('text', 'Returns:')])]))
-          builder.add(returnsNode, { handlers: { [ContentKind.Doc.BlockTag]: null } }, state)
+          builder.add(
+            returnsNode,
+            { handlers: { [ContentKind.Doc.BlockTag]: null } },
+            state,
+          )
         } else {
           builder.add([
             u('paragraph', [u('strong', [u('text', 'Returns:')])]),
             u('paragraph', [
-              u('text', node.data.excerpt.text.slice(node.data.excerpt.text.lastIndexOf(':')).slice(2, -1)),
+              u(
+                'text',
+                node.data.excerpt.text
+                  .slice(node.data.excerpt.text.lastIndexOf(':'))
+                  .slice(2, -1),
+              ),
             ]),
           ])
         }
       }
     }
 
-    const headingBaseDepth = Math.min(6, state.options.headingBaseDepth + 2) as MdastHeading['depth']
+    const headingBaseDepth = Math.min(
+      6,
+      state.options.headingBaseDepth + 2,
+    ) as MdastHeading['depth']
     if (commentNode) {
       builder.add(
         commentNode.children,
@@ -367,11 +433,15 @@ const defaultHandlers: InternalHandlers = {
   [ContentKind.Api.Function]: (node, state) => {
     const builder = new Builder()
 
-    const title = [u('inlineCode', `${node.data.displayName}()`), u('text', ' function')]
+    const title = [
+      u('inlineCode', `${node.data.displayName}()`),
+      u('text', ' function'),
+    ]
     if (state.options.headingBaseDepth === 6) {
       builder.add(u('paragraph', [u('strong', title)]))
     } else {
-      const depth = (state.options.headingBaseDepth + 1) as MdastHeading['depth']
+      const depth = (state.options.headingBaseDepth +
+        1) as MdastHeading['depth']
       builder.add(u('heading', { depth } as const, title))
     }
 
@@ -397,18 +467,30 @@ const defaultHandlers: InternalHandlers = {
       const summaryNode = find(commentNode, {
         data: commentNode.data.summarySection,
       })
-      if (!summaryNode || !find(summaryNode, { data: commentNode.data.returnsBlock })) {
+      if (
+        !summaryNode ||
+        !find(summaryNode, { data: commentNode.data.returnsBlock })
+      ) {
         const returnsNode = find(commentNode, {
           data: commentNode.data.returnsBlock,
         }) as Proxied<Block> | undefined
         if (returnsNode?.children.length) {
           builder.add(u('paragraph', [u('strong', [u('text', 'Returns:')])]))
-          builder.add(returnsNode, { handlers: { [ContentKind.Doc.BlockTag]: null } }, state)
+          builder.add(
+            returnsNode,
+            { handlers: { [ContentKind.Doc.BlockTag]: null } },
+            state,
+          )
         } else {
           builder.add([
             u('paragraph', [u('strong', [u('text', 'Returns:')])]),
             u('paragraph', [
-              u('text', node.data.excerpt.text.slice(node.data.excerpt.text.lastIndexOf(':')).slice(2, -1)),
+              u(
+                'text',
+                node.data.excerpt.text
+                  .slice(node.data.excerpt.text.lastIndexOf(':'))
+                  .slice(2, -1),
+              ),
             ]),
           ])
         }
@@ -424,11 +506,15 @@ const defaultHandlers: InternalHandlers = {
   [ContentKind.Api.Namespace]: (node, state) => {
     const builder = new Builder()
 
-    const title = [u('inlineCode', node.data.displayName), u('text', ' namespace')]
+    const title = [
+      u('inlineCode', node.data.displayName),
+      u('text', ' namespace'),
+    ]
     if (state.options.headingBaseDepth === 6) {
       builder.add(u('paragraph', [u('strong', title)]))
     } else {
-      const depth = (state.options.headingBaseDepth + 1) as MdastHeading['depth']
+      const depth = (state.options.headingBaseDepth +
+        1) as MdastHeading['depth']
       builder.add(u('heading', { depth } as const, title))
     }
 
@@ -497,7 +583,10 @@ const defaultHandlers: InternalHandlers = {
   [ContentKind.Api.Variable]: (node, state) => {
     const builder = new Builder()
 
-    const title = [u('inlineCode', node.data.displayName), u('text', ' variable')]
+    const title = [
+      u('inlineCode', node.data.displayName),
+      u('text', ' variable'),
+    ]
     // if (state.options.headingBaseDepth === 6) {
     if (state.options.headingBaseDepth > 1) {
       builder.add(u('paragraph', [u('strong', title)]))
@@ -521,7 +610,10 @@ const defaultHandlers: InternalHandlers = {
       u('code', { lang: 'ts' }, node.data.excerpt.text),
     ])
 
-    const headingBaseDepth = Math.min(6, state.options.headingBaseDepth + 2) as MdastHeading['depth']
+    const headingBaseDepth = Math.min(
+      6,
+      state.options.headingBaseDepth + 2,
+    ) as MdastHeading['depth']
     if (commentNode) {
       builder.add(
         commentNode.children,
@@ -572,7 +664,10 @@ const defaultHandlers: InternalHandlers = {
       u('code', { lang: 'ts' }, node.data.excerpt.text),
     ])
 
-    const headingBaseDepth = Math.min(6, state.options.headingBaseDepth + 2) as MdastHeading['depth']
+    const headingBaseDepth = Math.min(
+      6,
+      state.options.headingBaseDepth + 2,
+    ) as MdastHeading['depth']
     if (commentNode) {
       builder.add(
         commentNode.children,
@@ -597,28 +692,43 @@ const defaultHandlers: InternalHandlers = {
   },
   [ContentKind.Api.MethodSignature]: (node, _state) => {
     const res: MdastRootContent[] = []
-    res.push(u('paragraph', [u('strong', [u('text', 'Signature')])]), u('code', { lang: 'ts' }, node.data.excerpt.text))
+    res.push(
+      u('paragraph', [u('strong', [u('text', 'Signature')])]),
+      u('code', { lang: 'ts' }, node.data.excerpt.text),
+    )
     return res
   },
   [ContentKind.Api.PropertySignature]: (node, _state) => {
     const res: MdastRootContent[] = []
-    res.push(u('paragraph', [u('strong', [u('text', 'Signature')])]), u('code', { lang: 'ts' }, node.data.excerpt.text))
+    res.push(
+      u('paragraph', [u('strong', [u('text', 'Signature')])]),
+      u('code', { lang: 'ts' }, node.data.excerpt.text),
+    )
     return res
   },
   // TODO: fix type issue for `ContentKind.Api.CallSignature` resulting in `never`
   [ContentKind.Api.CallSignature]: (node, _state) => {
     const res: MdastRootContent[] = []
-    res.push(u('paragraph', [u('strong', [u('text', 'Signature')])]), u('code', { lang: 'ts' }, node.data.excerpt.text))
+    res.push(
+      u('paragraph', [u('strong', [u('text', 'Signature')])]),
+      u('code', { lang: 'ts' }, node.data.excerpt.text),
+    )
     return res
   },
   [ContentKind.Api.ConstructSignature]: (node, _state) => {
     const res: MdastRootContent[] = []
-    res.push(u('paragraph', [u('strong', [u('text', 'Signature')])]), u('code', { lang: 'ts' }, node.data.excerpt.text))
+    res.push(
+      u('paragraph', [u('strong', [u('text', 'Signature')])]),
+      u('code', { lang: 'ts' }, node.data.excerpt.text),
+    )
     return res
   },
   [ContentKind.Api.IndexSignature]: (node, _state) => {
     const res: MdastRootContent[] = []
-    res.push(u('paragraph', [u('strong', [u('text', 'Signature')])]), u('code', { lang: 'ts' }, node.data.excerpt.text))
+    res.push(
+      u('paragraph', [u('strong', [u('text', 'Signature')])]),
+      u('code', { lang: 'ts' }, node.data.excerpt.text),
+    )
     return res
   },
   [ContentKind.Api.None]: () => [],
@@ -638,7 +748,9 @@ const defaultHandlers: InternalHandlers = {
       ...(find(node, { data: node.data.seeBlocks }) ?? []),
     ].filter(Boolean) as DocContent[]
     // removes duplicated nodes //! maybe there is a bug in `find`
-    return [...new Set(children)].flatMap((n) => (state.handlers[n.type] as Handle)(n) as MdastRootContent[])
+    return [...new Set(children)].flatMap(
+      (n) => (state.handlers[n.type] as Handle)(n) as MdastRootContent[],
+    )
   },
   [ContentKind.Doc.Block]: (node, state) => {
     const res: MdastRootContent[] = []
@@ -658,12 +770,18 @@ const defaultHandlers: InternalHandlers = {
     return res
   },
   [ContentKind.Doc.Section]: (node, state) => {
-    return node.children.flatMap((n) => (state.handlers[n.type] as Handle)(n) as MdastRootContent[])
+    return node.children.flatMap(
+      (n) => (state.handlers[n.type] as Handle)(n) as MdastRootContent[],
+    )
   },
   [ContentKind.Doc.Paragraph]: (node, state) => {
     const res: MdastRootContent[] = []
     const p = u('paragraph', [] as MdastRootContent[])
-    p.children.push(...node.children.flatMap((n) => (state.handlers[n.type] as Handle)(n) as MdastRootContent[]))
+    p.children.push(
+      ...node.children.flatMap(
+        (n) => (state.handlers[n.type] as Handle)(n) as MdastRootContent[],
+      ),
+    )
     if (p.children.length) res.push(p as MdastRootContent)
     return res
   },
@@ -732,7 +850,9 @@ const defaultHandlers: InternalHandlers = {
     if (attributeNodes?.length) {
       //? has spaces in between already
       content += attributeNodes
-        .flatMap((attr) => (state.handlers[attr.type](attr) as MdastText[]).map((n) => n.value))
+        .flatMap((attr) =>
+          (state.handlers[attr.type](attr) as MdastText[]).map((n) => n.value),
+        )
         .join('')
     }
     content += node.data.selfClosingTag ? '/>' : '>'
@@ -775,14 +895,23 @@ const defaultHandlers: InternalHandlers = {
     const declarationReferenceNode = find(node, {
       data: node.data.declarationReference,
     })
-    if (declarationReferenceNode) res.push(...state.handlers[declarationReferenceNode.type](declarationReferenceNode))
+    if (declarationReferenceNode)
+      res.push(
+        ...state.handlers[declarationReferenceNode.type](
+          declarationReferenceNode,
+        ),
+      )
     return res
   },
   [ContentKind.Doc.LinkTag]: (node, state) => {
     const res: MdastRootContent[] = []
     if (node.data.urlDestination) {
       if (node.data.linkText) {
-        res.push(u('link', { url: node.data.urlDestination }, [u('text', node.data.linkText)]))
+        res.push(
+          u('link', { url: node.data.urlDestination }, [
+            u('text', node.data.linkText),
+          ]),
+        )
       } else {
         res.push(u('text', node.data.urlDestination))
       }
@@ -790,7 +919,12 @@ const defaultHandlers: InternalHandlers = {
       const declarationReferenceNode = find(node, {
         data: node.data.codeDestination,
       })
-      if (declarationReferenceNode) res.push(...state.handlers[declarationReferenceNode.type](declarationReferenceNode))
+      if (declarationReferenceNode)
+        res.push(
+          ...state.handlers[declarationReferenceNode.type](
+            declarationReferenceNode,
+          ),
+        )
     }
     return res
   },
@@ -812,13 +946,17 @@ const defaultHandlers: InternalHandlers = {
     })
     if (memberReferenceNodes?.length) {
       if (res.length) res.push(u('text', '!'))
-      res.push(...memberReferenceNodes.flatMap((n) => state.handlers[n.type](n)))
+      res.push(
+        ...memberReferenceNodes.flatMap((n) => state.handlers[n.type](n)),
+      )
     }
 
     //! temp
     res.unshift(u('text', '[['))
     res.push(u('text', ']]'))
-    return [u('inlineCode', res.map((n) => (n as MdastText).value).join(''))] as MdastRootContent[]
+    return [
+      u('inlineCode', res.map((n) => (n as MdastText).value).join('')),
+    ] as MdastRootContent[]
 
     // return res
   },
@@ -840,7 +978,11 @@ const defaultHandlers: InternalHandlers = {
     }
     if (selectorNode) {
       res.unshift(u('text', '('))
-      res.push(u('text', ':'), ...state.handlers[selectorNode.type](selectorNode), u('text', ')'))
+      res.push(
+        u('text', ':'),
+        ...state.handlers[selectorNode.type](selectorNode),
+        u('text', ')'),
+      )
     }
     if (node.data.hasDot) res.unshift(u('text', '.'))
 
@@ -860,7 +1002,12 @@ const defaultHandlers: InternalHandlers = {
     const declarationReferenceNode = find(node, {
       data: node.data.symbolReference,
     })
-    if (declarationReferenceNode) res.push(...state.handlers[declarationReferenceNode.type](declarationReferenceNode))
+    if (declarationReferenceNode)
+      res.push(
+        ...state.handlers[declarationReferenceNode.type](
+          declarationReferenceNode,
+        ),
+      )
     return res
   },
   [ContentKind.Doc.MemberSelector]: (node, _state) => {
@@ -929,7 +1076,9 @@ const defaultHandlers: InternalHandlers = {
 function toMdast<T extends Nodes>(
   tree: T,
   options?: Partial<Options> | null,
-): T['type'] extends typeof ContentKind.Api.Model ? MdastRoot : MdastRootContent[] {
+): T['type'] extends typeof ContentKind.Api.Model
+  ? MdastRoot
+  : MdastRootContent[] {
   const internalHandlers: InternalHandlers = {
     ...defaultHandlers,
     ...options?.handlers,
@@ -938,9 +1087,15 @@ function toMdast<T extends Nodes>(
   const handle = internalHandlers[tree.type] as InternalHandle<T['type']>
   const handlers = new Proxy<Handlers>(internalHandlers as Handlers, {
     get(target, prop: keyof InternalHandlers): Handle<typeof prop> {
-      const handle = (target as InternalHandlers)[prop] as InternalHandle<typeof prop>
+      const handle = (target as InternalHandlers)[prop] as InternalHandle<
+        typeof prop
+      >
       return (node, partialState) => {
-        const { handlers: partialHandlers, options: partialOptions, ...partialStateRest } = partialState ?? {}
+        const {
+          handlers: partialHandlers,
+          options: partialOptions,
+          ...partialStateRest
+        } = partialState ?? {}
         if (partialHandlers) {
           Object.keys(partialHandlers).forEach((k) => {
             if (partialHandlers[k] === null) {
@@ -962,7 +1117,9 @@ function toMdast<T extends Nodes>(
           },
           options: {
             handlers: partialOptions?.handlers ?? state.options.handlers,
-            headingBaseDepth: partialOptions?.headingBaseDepth ?? state.options.headingBaseDepth,
+            headingBaseDepth:
+              partialOptions?.headingBaseDepth ??
+              state.options.headingBaseDepth,
           },
         })
       }
@@ -976,7 +1133,10 @@ function toMdast<T extends Nodes>(
     ...options,
   }
   const treeWithParents = parents(tree)
-  return (handle as InternalHandle<NodeType>)(treeWithParents, state) as ReturnType<typeof toMdast<T>>
+  return (handle as InternalHandle<NodeType>)(
+    treeWithParents,
+    state,
+  ) as ReturnType<typeof toMdast<T>>
 }
 
 export { defaultHandlers, toMdast }

@@ -11,11 +11,18 @@ const tseslint = { parser, configs }
 type Config = ReturnType<typeof defineConfig>[number]
 
 export default defineConfig([
-  globalIgnores(['dist/*', 'config/types/unist-util-visit.d.ts'], 'Ignore irrelevant files'),
+  globalIgnores(
+    ['dist/*', 'config/types/unist-util-visit.d.ts'],
+    'Ignore irrelevant files',
+  ),
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     plugins: { js },
-    extends: ['js/recommended', importPlugin.flatConfigs.recommended, importPlugin.flatConfigs.typescript],
+    extends: [
+      'js/recommended',
+      importPlugin.flatConfigs.recommended,
+      importPlugin.flatConfigs.typescript,
+    ],
     languageOptions: { globals: globals.browser },
     settings: {
       //? fix `Unable to resolve path to module` - missing file extensions in paths
@@ -40,7 +47,10 @@ export default defineConfig([
       },
     },
     // https://typescript-eslint.io/users/configs
-    extends: [tseslint.configs.strictTypeChecked as Config, tseslint.configs.stylisticTypeChecked as Config],
+    extends: [
+      tseslint.configs.strictTypeChecked as Config,
+      tseslint.configs.stylisticTypeChecked as Config,
+    ],
     rules: {
       'import/no-cycle': 2,
 

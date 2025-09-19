@@ -17,7 +17,10 @@ describe('drop', () => {
       borrow(ownership)
       drop(ownership, Result.Ok)
     }
-    const ownership = new Ownership<number>().capture(123).expectPayload<Result>().give()
+    const ownership = new Ownership<number>()
+      .capture(123)
+      .expectPayload<Result>()
+      .give()
     _assert(ownership)
     drop(ownership, (payload) => {
       expect(ownership.take()).toBeUndefined()
@@ -36,7 +39,10 @@ describe('drop', () => {
         borrow(ownership)
         release(ownership, undefined, Result.Ok) // same as `drop`
       }
-      const ownership = new Ownership<number>().capture(123).expectPayload<Result>().give()
+      const ownership = new Ownership<number>()
+        .capture(123)
+        .expectPayload<Result>()
+        .give()
       _assert(ownership)
       // same as `drop`
       take(ownership, (value, payload) => {
@@ -54,13 +60,17 @@ describe('drop', () => {
           drop(ownership)
         }
         const ownership = new Ownership<number>().give()
-        expect(() => _assert(ownership)).toThrow('Unable to release (already settled), call `give` first')
+        expect(() => _assert(ownership)).toThrow(
+          'Unable to release (already settled), call `give` first',
+        )
       })
     }
   })
   test('@throws', () => {
     const ownership = new Ownership<number>().capture(123 as const).give()
-    expect(() => _assert(ownership)).toThrow('Unable to release (not borrowed), call `borrow` first')
+    expect(() => _assert(ownership)).toThrow(
+      'Unable to release (not borrowed), call `borrow` first',
+    )
 
     function _assert<T extends Ownership.GenericBounds>(
       ownership: Ownership.ParamsBounds<T> | undefined,

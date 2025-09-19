@@ -60,7 +60,12 @@ import { isPubOwnership } from '@ownership/utils/isPubOwnership'
  */
 export function borrow<T extends OwnershipTypes._GenericBounds>(
   ownership: OwnershipTypes.PubParamsBounds<T>,
-): asserts ownership is ConsumerOwnership<T['General'], T['Captured'], any, T['ReleasePayload']> {
+): asserts ownership is ConsumerOwnership<
+  T['General'],
+  T['Captured'],
+  any,
+  T['ReleasePayload']
+> {
   isPubOwnership(ownership)
   if (ownership.state !== 'given') {
     if (!ownership.options.throwOnWrongState) return

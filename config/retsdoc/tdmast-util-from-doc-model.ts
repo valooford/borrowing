@@ -1,4 +1,12 @@
-import type { ApiData, ApiDocumentedData, Data, DocData, Nodes, NodeType, Root } from './tdmast'
+import type {
+  ApiData,
+  ApiDocumentedData,
+  Data,
+  DocData,
+  Nodes,
+  NodeType,
+  Root,
+} from './tdmast'
 
 import { DocNode } from '@microsoft/tsdoc'
 
@@ -10,7 +18,9 @@ const hasComment = (node: ApiData): node is ApiDocumentedData => {
 }
 type PreferRoot<T> = T extends Root ? Root : T
 
-const fromDocModel = <Value extends Data>(value: Value): PreferRoot<Extract<Nodes, { data: Value }>> => {
+const fromDocModel = <Value extends Data>(
+  value: Value,
+): PreferRoot<Extract<Nodes, { data: Value }>> => {
   if (value instanceof DocNode) {
     return {
       type: value.kind as NodeType,

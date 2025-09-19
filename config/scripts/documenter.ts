@@ -42,14 +42,21 @@ async function updateReadme(filePath: string, headingText: string) {
   }
   const readmeFin = await unified()
     .use(remarkParse)
-    .use(remarkReplaceHeadingContent, { text: headingText, depth: 2 }, ...apiReference.children)
+    .use(
+      remarkReplaceHeadingContent,
+      { text: headingText, depth: 2 },
+      ...apiReference.children,
+    )
     // TODO: Update TOC (table of contents)
     .use(remarkStringify)
     .process(readme)
   await fs.writeFile(filePath, readmeFin.toString())
 }
 
-await Promise.all([updateReadme('README.md', 'API Reference'), updateReadme('README.ru-RU.md', 'Справочник API')])
+await Promise.all([
+  updateReadme('README.md', 'API Reference'),
+  updateReadme('README.ru-RU.md', 'Справочник API'),
+])
 
 console.log('Done')
 
@@ -57,7 +64,10 @@ console.log('Done')
 
 /** @see {@link https://github.com/unicorn-utterances/unist-util-replace-all-between} */
 
-function remarkReplaceHeadingContent(options: { text: string; depth?: Heading['depth'] }, ...content: RootContent[]) {
+function remarkReplaceHeadingContent(
+  options: { text: string; depth?: Heading['depth'] },
+  ...content: RootContent[]
+) {
   const { text, depth = 1 } = options
   return (tree: MdastRoot) => {
     let referenceIndex: number | undefined
@@ -72,7 +82,11 @@ function remarkReplaceHeadingContent(options: { text: string; depth?: Heading['d
           })
         }
       } else {
-        if (typeof nextHeadingIndex !== 'number' && node.depth < depth + 1 && typeof index === 'number') {
+        if (
+          typeof nextHeadingIndex !== 'number' &&
+          node.depth < depth + 1 &&
+          typeof index === 'number'
+        ) {
           nextHeadingIndex = index
         }
       }

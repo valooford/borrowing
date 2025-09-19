@@ -120,7 +120,12 @@ export class Ownership<
    *
    * @see https://github.com/valooford/borrowing#ownershipexpectpayload
    */
-  public override expectPayload<ReleasePayload>(): Ownership<General, Captured, State, ReleasePayload> {
+  public override expectPayload<ReleasePayload>(): Ownership<
+    General,
+    Captured,
+    State,
+    ReleasePayload
+  > {
     return super.expectPayload<ReleasePayload>()
   }
   /**
@@ -147,7 +152,9 @@ export class Ownership<
    *
    * @see https://github.com/valooford/borrowing#ownershipgive
    */
-  public override give(): ProviderOwnership<General, General | undefined, 'unknown', ReleasePayload> | undefined {
+  public override give():
+    | ProviderOwnership<General, General | undefined, 'unknown', ReleasePayload>
+    | undefined {
     return super.give()
   }
   /**
@@ -189,34 +196,37 @@ export declare namespace Ownership {
   /** Runtime borrowing mechanism settings. */
   export type Options = OwnershipTypes._Options
   /** The instance parameter types individually, such as `inferTypes<typeof ownership>['Captured']`. */
-  export type inferTypes<T extends OwnershipTypes.AnyOwnership> = OwnershipTypes._inferTypes<T>
+  export type inferTypes<T extends OwnershipTypes.AnyOwnership> =
+    OwnershipTypes._inferTypes<T>
   /**
    * For use in the parameter list of a generic assertion function to perform a mapping
    * from the type of the actual `Ownership` instance passed. \
    * The resulting type is a structure convenient for use in `*Assertion` utility types.
    */
-  export type GenericBounds<General = any, ReleasePayload = any> = OwnershipTypes._GenericBounds<
-    General,
-    ReleasePayload
-  >
+  export type GenericBounds<
+    General = any,
+    ReleasePayload = any,
+  > = OwnershipTypes._GenericBounds<General, ReleasePayload>
   /**
    * For use as the type of an assertion function parameter that takes an `Ownership` instance. \
    * A generic parameter extending `GenericBounds` is passed inside to ensure successful mapping.
    */
-  export type ParamsBounds<T extends GenericBounds> = OwnershipTypes.PubParamsBounds<T>
+  export type ParamsBounds<T extends GenericBounds> =
+    OwnershipTypes.PubParamsBounds<T>
   /**
    * The target type of an assertion function that results in `Ownership`
    * with a potentially morphed type of the captured value.
    */
-  export type MorphAssertion<T extends GenericBounds, ReleasedT extends T['Captured']> = OwnershipTypes._MorphAssertion<
-    T,
-    ReleasedT
-  >
+  export type MorphAssertion<
+    T extends GenericBounds,
+    ReleasedT extends T['Captured'],
+  > = OwnershipTypes._MorphAssertion<T, ReleasedT>
   /**
    * The target type of an assertion function that consumes a borrowed value completely
    * and invalidates the `Ownership` type.
    */
-  export type LeaveAssertion<T extends GenericBounds> = OwnershipTypes._LeaveAssertion<T>
+  export type LeaveAssertion<T extends GenericBounds> =
+    OwnershipTypes._LeaveAssertion<T>
 }
 
 export class InternalConsumerOwnership<
@@ -266,7 +276,12 @@ export class ProviderOwnership<
    *
    * @see https://github.com/valooford/borrowing#ownershipexpectpayload
    */
-  public override expectPayload<ReleasePayload>(): Ownership<General, Captured, State, ReleasePayload> {
+  public override expectPayload<ReleasePayload>(): Ownership<
+    General,
+    Captured,
+    State,
+    ReleasePayload
+  > {
     return super.expectPayload<ReleasePayload>()
   }
   /**
@@ -293,7 +308,9 @@ export class ProviderOwnership<
    *
    * @see https://github.com/valooford/borrowing#ownershipgive
    */
-  public override give(): ProviderOwnership<General, General | undefined, 'unknown', ReleasePayload> | undefined {
+  public override give():
+    | ProviderOwnership<General, General | undefined, 'unknown', ReleasePayload>
+    | undefined {
     return super.give()
   }
   /**

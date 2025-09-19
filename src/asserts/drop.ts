@@ -82,9 +82,14 @@ import { take } from './take'
  *
  * @see https://github.com/valooford/borrowing#drop
  */
-export function drop<T extends OwnershipTypes.AnyOwnership, TMap extends OwnershipTypes._inferTypes<T>>(
+export function drop<
+  T extends OwnershipTypes.AnyOwnership,
+  TMap extends OwnershipTypes._inferTypes<T>,
+>(
   ownership: T | undefined,
-  payloadOrReceiver?: TMap['ReleasePayload'] | ((payload: TMap['ReleasePayload']) => void),
+  payloadOrReceiver?:
+    | TMap['ReleasePayload']
+    | ((payload: TMap['ReleasePayload']) => void),
 ): asserts ownership is undefined {
   isOwnership<TMap>(ownership)
   if (isFunction(payloadOrReceiver)) {

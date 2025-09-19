@@ -17,14 +17,20 @@ type OrArrayOf<T extends TestObject, R> = T['data'] extends readonly any[]
   : T['type'] extends [NodeType]
     ? R[]
     : R
-type OrProxied<T extends Nodes, R extends Nodes> = T extends Proxied ? Proxied<R> : R
+type OrProxied<T extends Nodes, R extends Nodes> = T extends Proxied
+  ? Proxied<R>
+  : R
 
 type TestObject = OrArray<TestObjectBase>
 
-const isDataArray = <T extends TestObject>(condition: T): condition is Extract<T, { data: any[] }> => {
+const isDataArray = <T extends TestObject>(
+  condition: T,
+): condition is Extract<T, { data: any[] }> => {
   return Array.isArray(condition.data)
 }
-const isTypeArray = <T extends TestObject>(condition: T): condition is Extract<T, { type: [NodeType] }> => {
+const isTypeArray = <T extends TestObject>(
+  condition: T,
+): condition is Extract<T, { type: [NodeType] }> => {
   return Array.isArray(condition.type)
 }
 
@@ -37,11 +43,16 @@ function find<T extends Nodes, Test extends TestObject>(
   if (isDataArray(condition)) {
     // TODO: keep order the same
     const match = new Set(condition.data)
-    return (tree.children as Nodes[]).filter((n) => match.has(n.data)) as Exclude<ReturnType<typeof find>, Nodes>
+    return (tree.children as Nodes[]).filter((n) =>
+      match.has(n.data),
+    ) as Exclude<ReturnType<typeof find>, Nodes>
   }
   if (isTypeArray(condition)) {
     const [type] = condition.type
-    return (tree.children as Nodes[]).filter((n) => n.type === type) as Exclude<ReturnType<typeof find>, Nodes>
+    return (tree.children as Nodes[]).filter((n) => n.type === type) as Exclude<
+      ReturnType<typeof find>,
+      Nodes
+    >
   }
   return (tree.children as Nodes[]).find((child) => {
     if (condition.data) return child.data === condition.data

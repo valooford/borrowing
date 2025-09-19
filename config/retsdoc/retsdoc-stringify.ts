@@ -8,7 +8,9 @@ type Options = Readonly<{
   space?: string | number | undefined
 }>
 
-const retsdocStringify: Plugin<[(Options | null)?], Root, string> = function (options) {
+const retsdocStringify: Plugin<[(Options | null)?], Root, string> = function (
+  options,
+) {
   ;(this.compiler as Compiler<Root, string>) = (tree) => {
     const jsonObject = {}
     tree.data.serializeInto(jsonObject)

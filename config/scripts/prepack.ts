@@ -15,8 +15,14 @@ async function prepack() {
   // COPY included files //
   /////////////////////////
 
-  const defaultIgnoreFile = path.join(import.meta.dirname, '../.default.npmignore')
-  const tempRootIgnoreFile = path.resolve(process.cwd(), path.basename(defaultIgnoreFile))
+  const defaultIgnoreFile = path.join(
+    import.meta.dirname,
+    '../.default.npmignore',
+  )
+  const tempRootIgnoreFile = path.resolve(
+    process.cwd(),
+    path.basename(defaultIgnoreFile),
+  )
   fs.copyFileSync(defaultIgnoreFile, tempRootIgnoreFile)
 
   // https://github.com/sindresorhus/globby
@@ -64,7 +70,9 @@ async function prepack() {
   for (const file of files) {
     const fileSrcPath = rootPath(file)
     const fileDstPath = distPath(
-      file.startsWith('src/') ? path.posix.relative(rootPath('src'), fileSrcPath) : path.basename(file),
+      file.startsWith('src/')
+        ? path.posix.relative(rootPath('src'), fileSrcPath)
+        : path.basename(file),
     )
 
     const dstDir = path.posix.dirname(fileDstPath)
@@ -80,7 +88,9 @@ async function prepack() {
   /////////////////////////////////
 
   const packageJsonPath = rootPath('package.json')
-  const packageData = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as PackageJson
+  const packageData = JSON.parse(
+    fs.readFileSync(packageJsonPath, 'utf-8'),
+  ) as PackageJson
 
   delete packageData.engines
   delete packageData.scripts
@@ -92,7 +102,8 @@ async function prepack() {
     Object.entries(packageData.exports).forEach(([ek, entryPoint]) => {
       if (typeof entryPoint === 'string') {
         if (packageData.exports) {
-          ;(packageData.exports[ek] as unknown as string) = makeDistRelative(entryPoint)
+          ;(packageData.exports[ek] as unknown as string) =
+            makeDistRelative(entryPoint)
         }
         return
       }
@@ -102,7 +113,10 @@ async function prepack() {
     })
   }
 
-  fs.writeFileSync(distPath(path.posix.basename(packageJsonPath)), JSON.stringify(packageData, null, 2))
+  fs.writeFileSync(
+    distPath(path.posix.basename(packageJsonPath)),
+    JSON.stringify(packageData, null, 2),
+  )
 }
 
 prepack().catch((err: unknown) => {

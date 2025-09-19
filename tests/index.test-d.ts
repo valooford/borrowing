@@ -13,7 +13,9 @@ import { borrow, drop, Ownership, release, take } from 'borrowing'
 describe('Ownership', () => {
   it('should initialize the general type', () => {
     const ownership = new Ownership<number>()
-    expectTypeOf(ownership).toEqualTypeOf<Ownership<number, unknown, Branded<'settled', 'released'>, unknown>>()
+    expectTypeOf(ownership).toEqualTypeOf<
+      Ownership<number, unknown, Branded<'settled', 'released'>, unknown>
+    >()
   })
   describe('should have inferrable types', () => {
     type Instance = Ownership<'first', 'second', 'unknown', 'fourth'>
@@ -28,7 +30,9 @@ describe('Ownership', () => {
   it('should capture the constant form of the value', () => {
     const value = 'Hello' as const
     const _ownership = new Ownership<string>().capture(value)
-    expectTypeOf<Ownership.inferTypes<typeof _ownership>['Captured']>().toExtend<'Hello'>()
+    expectTypeOf<
+      Ownership.inferTypes<typeof _ownership>['Captured']
+    >().toExtend<'Hello'>()
   })
 })
 
@@ -38,7 +42,10 @@ interface Config {
 }
 
 describe('Usage (provide)', () => {
-  function updateConfig<V extends Config, T extends Ownership.GenericBounds<Config>>(
+  function updateConfig<
+    V extends Config,
+    T extends Ownership.GenericBounds<Config>,
+  >(
     ownership: Ownership.ParamsBounds<T> | undefined,
     value: V,
   ): asserts ownership is Ownership.MorphAssertion<T, V> {
@@ -64,10 +71,16 @@ describe('Usage (provide)', () => {
     expectTypeOf(released3).toEqualTypeOf<{ value: 'open' }>()
   })
 
-  function updateValue<V extends Variants, T extends Ownership.GenericBounds<Config>>(
+  function updateValue<
+    V extends Variants,
+    T extends Ownership.GenericBounds<Config>,
+  >(
     ownership: Ownership.ParamsBounds<T> | undefined,
     value: V,
-  ): asserts ownership is Ownership.MorphAssertion<T, T['General'] & { value: V }> {
+  ): asserts ownership is Ownership.MorphAssertion<
+    T,
+    T['General'] & { value: V }
+  > {
     borrow(ownership)
     release(ownership, { value: ownership.captured.length < 0 ? value : value })
   }
@@ -195,10 +208,16 @@ describe('Usage (consume)', () => {
   })
 
   it('should validate the release payload for partials', () => {
-    function _updateValue_bad<V extends Variants, T extends Ownership.GenericBounds<Config>>(
+    function _updateValue_bad<
+      V extends Variants,
+      T extends Ownership.GenericBounds<Config>,
+    >(
       ownership: Ownership.ParamsBounds<T> | undefined,
       value: V,
-    ): asserts ownership is Ownership.MorphAssertion<T, T['General'] & { value: V }> {
+    ): asserts ownership is Ownership.MorphAssertion<
+      T,
+      T['General'] & { value: V }
+    > {
       borrow(ownership)
       // @ts-expect-error: must be `{ value }`
       release(ownership, value)
@@ -268,7 +287,10 @@ describe('Doc-tests', () => {
       expectTypeOf(ownership).toBeUndefined()
     }
 
-    function replaceStr<V extends string, T extends Ownership.GenericBounds<string>>(
+    function replaceStr<
+      V extends string,
+      T extends Ownership.GenericBounds<string>,
+    >(
       ownership: Ownership.ParamsBounds<T> | undefined,
       value: V,
     ): asserts ownership is Ownership.MorphAssertion<T, V> {
@@ -290,7 +312,9 @@ describe('Doc-tests', () => {
       interface State {
         value: string
       }
-      let ownership = new Ownership<State>({ throwOnWrongState: false }).capture({ value: 'open' } as const).give()
+      let ownership = new Ownership<State>({ throwOnWrongState: false })
+        .capture({ value: 'open' } as const)
+        .give()
       update(ownership, 'closed')
       const v1 = ownership.take().value // type 'closed'
       update(ownership, 'open')
@@ -300,7 +324,10 @@ describe('Doc-tests', () => {
       update(ownership, 'open')
       const v3 = ownership.take().value // type 'open'
 
-      function update<T extends Ownership.GenericBounds<State>, V extends 'open' | 'closed'>(
+      function update<
+        T extends Ownership.GenericBounds<State>,
+        V extends 'open' | 'closed',
+      >(
         ownership: Ownership.ParamsBounds<T> | undefined,
         value: V,
       ): asserts ownership is Ownership.MorphAssertion<T, { value: V }> {
@@ -319,7 +346,9 @@ describe('Doc-tests', () => {
       interface State {
         value: string
       }
-      let ownership = new Ownership<State>().capture({ value: 'open' } as const).give()
+      let ownership = new Ownership<State>()
+        .capture({ value: 'open' } as const)
+        .give()
       update(ownership, 'closed')
       update(ownership, 'open')
       take(ownership, ({ value }) => {
@@ -329,7 +358,10 @@ describe('Doc-tests', () => {
         // expectTypeOf(value).toEqualTypeOf<'closed'>()
       })
 
-      function update<T extends Ownership.GenericBounds<State>, V extends 'open' | 'closed'>(
+      function update<
+        T extends Ownership.GenericBounds<State>,
+        V extends 'open' | 'closed',
+      >(
         ownership: Ownership.ParamsBounds<T> | undefined,
         value: V,
       ): asserts ownership is Ownership.MorphAssertion<T, { value: V }> {

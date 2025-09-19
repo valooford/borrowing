@@ -55,7 +55,10 @@ import { isOwnership } from '@ownership/utils/isOwnership'
  *
  * @see https://github.com/valooford/borrowing#release
  */
-export function release<T extends OwnershipTypes.AnyOwnership, TMap extends OwnershipTypes._inferTypes<T>>(
+export function release<
+  T extends OwnershipTypes.AnyOwnership,
+  TMap extends OwnershipTypes._inferTypes<T>,
+>(
   ownership: T | undefined,
   value?: TMap['General'],
   payload?: TMap['ReleasePayload'],

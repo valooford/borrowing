@@ -10,16 +10,20 @@ import { find } from './tdmast-util-find.ts'
 
 type OrArray<T> = T extends infer TT ? TT | TT[] : never
 
-const isData = (content: unknown): content is Data => content instanceof ApiItem || content instanceof DocNode
-const isTdmastNode = (node: MdastNode | Node | undefined): node is Node => isData(node?.data)
-const isTdmastArray = (array: (MdastNode | Node)[]): array is Node[] => isTdmastNode(array.at(0))
+const isData = (content: unknown): content is Data =>
+  content instanceof ApiItem || content instanceof DocNode
+const isTdmastNode = (node: MdastNode | Node | undefined): node is Node =>
+  isData(node?.data)
+const isTdmastArray = (array: (MdastNode | Node)[]): array is Node[] =>
+  isTdmastNode(array.at(0))
 const isCondition = (content: unknown): content is TestObject => {
   if (Array.isArray(content)) return false
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if ((content as Nodes).children) return false
   return true
 }
-const toArr = <T>(v: T) => (Array.isArray(v) ? v : [v]) as T extends any[] ? T : T[]
+const toArr = <T>(v: T) =>
+  (Array.isArray(v) ? v : [v]) as T extends any[] ? T : T[]
 
 interface Options {
   allowDuplicates: boolean
@@ -40,7 +44,11 @@ class Builder {
     partialState: PartialState | undefined,
     state: State<any>, // TODO: fix `state` that is a required parameter
   ): void
-  add<T extends Nodes>(content: TestObject, node: T, state: State<T['type']>): void
+  add<T extends Nodes>(
+    content: TestObject,
+    node: T,
+    state: State<T['type']>,
+  ): void
   add(content: OrArray<MdastNode>): void
   add(
     content: OrArray<MdastNode | Node> | TestObject | Builder,
@@ -61,7 +69,11 @@ class Builder {
         nArr = nArr.filter((n) => !this.#cache.has(n)) as typeof nArr
         nArr.forEach((n) => this.#cache.add(n))
       }
-      this.content.push(...nArr.flatMap((ch) => (state.handlers[ch.type] as Handle)(ch) as MdastRootContent[]))
+      this.content.push(
+        ...nArr.flatMap(
+          (ch) => (state.handlers[ch.type] as Handle)(ch) as MdastRootContent[],
+        ),
+      )
 
       return
     }
@@ -72,12 +84,18 @@ class Builder {
       if (!state) return
       let filteredTdmastNodes = nArr
       if (!this.options.allowDuplicates) {
-        filteredTdmastNodes = filteredTdmastNodes.filter((n) => !this.#cache.has(n))
+        filteredTdmastNodes = filteredTdmastNodes.filter(
+          (n) => !this.#cache.has(n),
+        )
         filteredTdmastNodes.forEach((n) => this.#cache.add(n))
       }
       this.content.push(
         ...filteredTdmastNodes.flatMap(
-          (n) => (state.handlers[n.type] as Handle)(n, partialState) as MdastRootContent[],
+          (n) =>
+            (state.handlers[n.type] as Handle)(
+              n,
+              partialState,
+            ) as MdastRootContent[],
         ),
       )
     } else {

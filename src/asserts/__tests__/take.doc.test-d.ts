@@ -25,7 +25,9 @@ describe('take', () => {
       ownership // type `Ownership<...>`
       {
         /* test */
-        expectTypeOf(ownership).toEqualTypeOf<Ownership<number, 123, Branded<'settled', 'released'>, unknown>>()
+        expectTypeOf(ownership).toEqualTypeOf<
+          Ownership<number, 123, Branded<'settled', 'released'>, unknown>
+        >()
       }
       // safe
       take(ownership, (value) => (_dst = value))
