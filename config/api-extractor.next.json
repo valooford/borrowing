@@ -1,0 +1,20 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+
+  "mainEntryPointFilePath": "<projectFolder>/dist/next/index.d.ts",
+  "apiReport": {
+    "enabled": true,
+    "reportFileName": "<unscopedPackageName>.next"
+  },
+  "docModel": {
+    "enabled": true,
+    "apiJsonFilePath": "<projectFolder>/temp/<unscopedPackageName>.next.api.json"
+  },
+  "dtsRollup": {
+    "enabled": true,
+    "untrimmedFilePath": "<projectFolder>/dist/next/index.d.ts" // overrides the declaration file from `tsdown` (mainEntryPointFilePath)
+  },
+  "tsdocMetadata": {
+    "tsdocMetadataFilePath": "<projectFolder>/dist/next/tsdoc-metadata.json"
+  }
+}

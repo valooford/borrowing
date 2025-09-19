@@ -494,7 +494,56 @@ const defaultHandlers: InternalHandlers = {
   },
   [ContentKind.Api.Enum]: empty,
   [ContentKind.Api.EnumMember]: empty,
-  [ContentKind.Api.Variable]: empty,
+  [ContentKind.Api.Variable]: (node, state) => {
+    const builder = new Builder()
+
+    const title = [u('inlineCode', node.data.displayName), u('text', ' variable')]
+    // if (state.options.headingBaseDepth === 6) {
+    if (state.options.headingBaseDepth > 1) {
+      builder.add(u('paragraph', [u('strong', title)]))
+    } else {
+      const depth = (state.options.headingBaseDepth +
+        // 1) as MdastHeading['depth']
+        5) as MdastHeading['depth']
+      builder.add(u('heading', { depth } as const, title))
+    }
+
+    const commentNode = find(node, { data: node.data.tsdocComment })
+    if (commentNode) {
+      builder.add({ data: commentNode.data.summarySection }, commentNode, {
+        ...state,
+        handle: state.handlers[commentNode.type],
+      })
+    }
+
+    builder.add([
+      u('paragraph', [u('strong', [u('text', 'Signature:')])]),
+      u('code', { lang: 'ts' }, node.data.excerpt.text),
+    ])
+
+    const headingBaseDepth = Math.min(6, state.options.headingBaseDepth + 2) as MdastHeading['depth']
+    if (commentNode) {
+      builder.add(
+        commentNode.children,
+        // { options: { headingBaseDepth } },
+        {
+          handlers: {
+            [ContentKind.Doc.BlockTag]: (n, s) =>
+              state.handlers[ContentKind.Doc.BlockTag](n, {
+                ...s,
+                options: {
+                  headingBaseDepth,
+                  ...s?.options,
+                },
+              }),
+          },
+        },
+        state,
+      )
+    }
+
+    return builder.content
+  },
   [ContentKind.Api.Interface]: empty,
   [ContentKind.Api.TypeAlias]: (node, state) => {
     const builder = new Builder()

@@ -1,4 +1,4 @@
-import type packageJson from '../package.json'
+import type packageJson from '../../package.json'
 
 import fs from 'node:fs'
 import path from 'node:path'
@@ -15,10 +15,8 @@ async function prepack() {
   // COPY included files //
   /////////////////////////
 
-  const defaultIgnoreFile = path.join(import.meta.dirname, '.default.npmignore')
+  const defaultIgnoreFile = path.join(import.meta.dirname, '../.default.npmignore')
   const tempRootIgnoreFile = path.resolve(process.cwd(), path.basename(defaultIgnoreFile))
-  console.log('defaultIgnoreFile', defaultIgnoreFile)
-  console.log('tempRootIgnoreFile', tempRootIgnoreFile)
   fs.copyFileSync(defaultIgnoreFile, tempRootIgnoreFile)
 
   // https://github.com/sindresorhus/globby

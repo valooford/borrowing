@@ -11,7 +11,8 @@
   "git.followTagsWhenSync": true,
   "files.associations": {
     // comments are allowed in these files
-    "api-extractor.json": "jsonc",
-    "tsdoc.json": "jsonc"
+    "api-extractor*.json": "jsonc",
+    "tsdoc.json": "jsonc",
+    "tsdoc-metadata.json": "jsonc"
   }
 }

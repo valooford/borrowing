@@ -22,11 +22,11 @@
   "scripts": {
     "dev": "tsdown --watch -c config/tsdown.config.ts",
     "build": "tsdown -c config/tsdown.config.ts",
-    "build:docs": "node --experimental-strip-types ./config/documenter.ts",
+    "build:docs": "node --experimental-strip-types ./config/scripts/documenter.ts",
     "lint": "eslint . --cache --flag unstable_native_nodejs_ts_config",
     "format": "prettier . --write",
     "test": "vitest run -c config/vitest.config.ts",
-    "prepack": "node --experimental-strip-types ./config/prepack.ts",
+    "prepack": "node --experimental-strip-types ./config/scripts/prepack.ts",
     "pack": "pnpm prepack && cd dist && pnpm pack --pack-destination ..",
     "prerelease": "pnpm version prerelease --preid beta",
     "publish:npm": "pnpm prepack && cd dist && pnpm publish --access public --tag next",

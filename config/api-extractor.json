@@ -281,7 +281,6 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<projectFolder>/dist/<unscopedPackageName>.d.ts"
      */
-    // TODO: create `api-extractor.beta.json` for beta version of the package
     "untrimmedFilePath": "<projectFolder>/dist/index.d.ts" // overrides the declaration file from `tsdown` (mainEntryPointFilePath)
 
     /**

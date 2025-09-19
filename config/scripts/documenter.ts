@@ -8,21 +8,48 @@ import { unified } from 'unified'
 import { u } from 'unist-builder'
 import { visit } from 'unist-util-visit'
 
-import { retsdocRemark } from './retsdoc/retsdoc-remark.ts'
-import retsdoc from './retsdoc/retsdoc.ts'
+import { loadPackage } from '../retsdoc/retsdoc-parse.ts'
+import { retsdocRemark } from '../retsdoc/retsdoc-remark.ts'
+import retsdoc from '../retsdoc/retsdoc.ts'
+import { find } from '../retsdoc/tdmast-util-find.ts'
+import { ContentKind } from '../retsdoc/tdmast.ts'
 
 const docModel = await read('temp/borrowing.api.json')
 const apiPackageTree = retsdoc().parse(docModel)
-const apiReference = await retsdoc().use(retsdocRemark, { headingDepth: 3 }).run(apiPackageTree)
+const apiReference = await retsdoc()
+  .use(loadPackage, { apiJsonFilename: 'temp/borrowing.next.api.json' })
+  .use(retsdocRemark, {
+    headingBaseDepth: 2,
+    handlers: {
+      [ContentKind.Api.Package]: (node, state) => {
+        if (node.data.displayName !== 'borrowing/next') return []
+        const entryPointNodes = find(node, { data: node.data.entryPoints })
+        if (entryPointNodes?.length) {
+          return entryPointNodes.flatMap((n) => state.handlers[n.type](n))
+        }
+        return []
+      },
+    },
+  })
+  .run(apiPackageTree)
 
-const readme = await fs.readFile('README.md', 'utf8')
-const readmeFin = await unified()
-  .use(remarkParse)
-  .use(remarkReplaceHeadingContent, { text: 'API Reference', depth: 2 }, ...apiReference.children)
-  // TODO: Update TOC (table of contents)
-  .use(remarkStringify)
-  .process(readme)
-await fs.writeFile('README.md', readmeFin.toString())
+async function updateReadme(filePath: string, headingText: string) {
+  let readme
+  try {
+    readme = await fs.readFile(filePath, 'utf8')
+  } catch {
+    readme ??= ''
+  }
+  const readmeFin = await unified()
+    .use(remarkParse)
+    .use(remarkReplaceHeadingContent, { text: headingText, depth: 2 }, ...apiReference.children)
+    // TODO: Update TOC (table of contents)
+    .use(remarkStringify)
+    .process(readme)
+  await fs.writeFile(filePath, readmeFin.toString())
+}
+
+await Promise.all([updateReadme('README.md', 'API Reference'), updateReadme('README.ru-RU.md', 'Справочник API')])
 
 console.log('Done')
 
