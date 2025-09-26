@@ -4,6 +4,55 @@
 
 ```ts
 
+// @public (undocumented)
+export type Borrow<T = unknown, C extends T = T> = Ref<T, C> & {
+    take(): RefCell<T, C>;
+};
+
+// @public (undocumented)
+export function borrow<T, C extends T = T>(cell: RefCell<T, C>): asserts cell is Borrow<T, C>;
+
+// @public (undocumented)
+export type BorrowMut<T = unknown, C extends T = T> = RefMut<T, C> & {
+    take(): RefCellMut<T, C>;
+};
+
+// @public (undocumented)
+export function borrowMut<T>(cell: RefCellMut<T, T>): asserts cell is BorrowMut<T, T>;
+
+// Warning: (ae-forgotten-export) The symbol "Mut" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export const mut: <T>(v: T) => Mut<T>;
+
+// @public (undocumented)
+export type Ref<T = unknown, C extends T = T> = RefCell<T, C> & {
+    deref(): C;
+};
+
+// Warning: (ae-forgotten-export) The symbol "RefCellBase" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "UnionToIntersection" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "Traits" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "DerivedTraits" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type RefCell<T = any, C extends T = T> = RefCellBase<T, C> & UnionToIntersection<Traits<T, C, DerivedTraits<C>>>;
+
+// Warning: (ae-forgotten-export) The symbol "RefCellMutBase" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type RefCellMut<T = any, C extends T = T> = RefCellMutBase<T, C> & UnionToIntersection<Traits<T, C, DerivedTraits<C>>>;
+
+// @public (undocumented)
+export type RefMut<T = unknown, C extends T = T> = RefCellMut<T, C> & {
+    deref(): C;
+};
+
+// Warning: (ae-forgotten-export) The symbol "ScopeBlock" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export const scope: <Move extends RefCellBase[]>(...args: [...Move, ScopeBlock<Move>]) => void;
+
 // @beta
 export const _WORK_IN_PROGRESS: boolean;
 

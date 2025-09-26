@@ -8,3 +8,9 @@ interface Brand<B> {
 export type Branded<T, B = T> = T & Brand<B>
 /** @internal */
 export type BrandOf<T> = T extends Branded<any, infer B> ? B : never
+
+export type UnionToIntersection<T> = (
+  T extends any ? (x: T) => void : never
+) extends (x: infer I) => void
+  ? I
+  : never

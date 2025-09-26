@@ -177,6 +177,48 @@ export function sendMessage<T extends Ownership.GenericBounds<string>>(
 
 ## Справочник API
 
+### Functions
+
+#### `borrow()` function
+
+**Signature:**
+
+```ts
+declare function borrow<T, C extends T = T>(
+  cell: RefCell<T, C>,
+): asserts cell is Borrow<T, C>
+```
+
+#### `borrowMut()` function
+
+**Signature:**
+
+```ts
+declare function borrowMut<T>(
+  cell: RefCellMut<T, T>,
+): asserts cell is BorrowMut<T, T>
+```
+
+#### `mut()` function
+
+**Signature:**
+
+```ts
+mut: <T>(v: T) => Mut<T>
+```
+
+###### Public
+
+#### `scope()` function
+
+**Signature:**
+
+```ts
+scope: <Move extends RefCellBase[]>(...args: [...Move, ScopeBlock<Move>]) => void
+```
+
+###### Public
+
 ### Variables
 
 **`_WORK_IN_PROGRESS` variable**
@@ -190,6 +232,66 @@ _WORK_IN_PROGRESS: boolean
 ```
 
 ###### Beta
+
+### Type Aliases
+
+**`Borrow` type**
+
+**Signature:**
+
+```ts
+type Borrow<T = unknown, C extends T = T> = Ref<T, C> & {
+  take(): RefCell<T, C>
+}
+```
+
+**`BorrowMut` type**
+
+**Signature:**
+
+```ts
+type BorrowMut<T = unknown, C extends T = T> = RefMut<T, C> & {
+  take(): RefCellMut<T, C>
+}
+```
+
+**`Ref` type**
+
+**Signature:**
+
+```ts
+type Ref<T = unknown, C extends T = T> = RefCell<T, C> & {
+  deref(): C
+}
+```
+
+**`RefCell` type**
+
+**Signature:**
+
+```ts
+type RefCell<T = any, C extends T = T> = RefCellBase<T, C> &
+  UnionToIntersection<Traits<T, C, DerivedTraits<C>>>
+```
+
+**`RefCellMut` type**
+
+**Signature:**
+
+```ts
+type RefCellMut<T = any, C extends T = T> = RefCellMutBase<T, C> &
+  UnionToIntersection<Traits<T, C, DerivedTraits<C>>>
+```
+
+**`RefMut` type**
+
+**Signature:**
+
+```ts
+type RefMut<T = unknown, C extends T = T> = RefCellMut<T, C> & {
+  deref(): C
+}
+```
 
 ## Ограничения и советы
 

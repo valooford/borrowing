@@ -17,7 +17,9 @@ export default defineConfig((options) => {
       nodeTs('./config/scripts/preservePackageDocumentation.ts'),
       'api-extractor run --local --verbose',
       /* +next */
-      // nodeTs('./config/scripts/preservePackageDocumentation.ts next.ts next/index.d.ts'),
+      nodeTs(
+        './config/scripts/preservePackageDocumentation.ts next.ts next/index.d.ts',
+      ),
       nodeTs('./config/scripts/setPackageName.ts "@temp/borrowing"'),
       'api-extractor run --local --verbose -c config/api-extractor.next.json',
       nodeTs(
